@@ -21,5 +21,16 @@ Projeto para criar e implementar em produção um site para uma Ong.
 
 [ ] Criar dashboard mostrando taxas (Acessos ao site, doação)
 
+[ ] Ver sobre segurança do Site 
+
+[ ] Fazer conexão e criar o banco de dados
+
 
 # =======================================================
+
+
+# PEDRO ===================================
++ Ver como fazer o back-end aqui         ||
+#                                        ||
++ Como mandar dados pela rota            ||
+# =========================================
