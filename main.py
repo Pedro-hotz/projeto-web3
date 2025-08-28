@@ -1,20 +1,10 @@
-from flask import Flask, render_template
+from flask import Flask
 
 app = Flask(__name__)   
 
+# na main, não botamos todas as rotas. Apenas conexão com o BD e token/autorização
 
-# Para criar uma página, precisa criar um route e uma função 
-@app.route("/")
-def home():
-    return render_template("homepage.html") # Quando a url bater na rota, o Flask vai renderizar/chamar o template homepage.html
-
-
-# Dessa forma é passado parametros pelo URL 
-# Caso digitar http://127.0.0.1:5000/perfil/pedro vc vai entrar em uma pagina html que mostra o nome passado
-@app.route("/perfil/<nomeUsuario>") 
-def perfil(nomeUsuario):
-    return render_template("usuarios.html", nomeUsuario=nomeUsuario)
-
+from router import *
 
 # Coloca o site no ar
 if __name__ == '__main__': 
