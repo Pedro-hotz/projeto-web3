@@ -29,8 +29,8 @@ Projeto para criar e implementar em produção um site para uma Ong.
 # =======================================================
 
 
-# PEDRO ===================================
-+ Ver como fazer o back-end aqui         ||
-#                                        ||
-+ Como mandar dados pela rota            ||
-# =========================================
+# PEDRO ===============================================
+# + Ver como fazer o back-end aqui                   ||
+#                                                    ||
+# + Como mandar dados pela rota  ( JSON | PAYLOAD)   ||
+# =====================================================
