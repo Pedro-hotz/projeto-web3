@@ -1,12 +1,12 @@
 from main import app
-from flask import render_template 
+from flask import render_template
 
 ## Aqui nos chamamos todas as rotas
 
 # Para criar uma página, precisa criar um route e uma função 
 @app.route("/")
 def home():
-    return render_template("homepage") # Quando a url bater na rota, o Flask vai renderizar/chamar o template homepage.html
+    return render_template("homepage.html") # Quando a url bater na rota, o Flask vai renderizar/chamar o template homepage.html
 
 
 # Dessa forma é passado parametros pelo URL 

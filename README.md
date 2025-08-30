@@ -25,7 +25,6 @@ Projeto para criar e implementar em produção um site para uma Ong.
 
 [ ] Fazer conexão e criar o banco de dados
 
-
 # =======================================================
 
 
