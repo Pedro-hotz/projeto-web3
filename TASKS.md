@@ -28,5 +28,5 @@
 # PEDRO ===============================================
 # + Ver como fazer o back-end aqui                   ||
 #                                                    ||
-# + Como mandar dados pela rota  ( JSON | PAYLOAD)   ||
+# + Como mandar  JSON / PAYLOAD                      ||
 # =====================================================
