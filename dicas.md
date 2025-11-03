@@ -86,10 +86,20 @@ if __name__ == '__main__':
 --------------------------------------------------
 
 
+5. Melhorias e extensões possíveis
+
+Depois de tudo funcionando, você pode adicionar:
+
+🔐 Login e autenticação (com Flask-Login)
+
+📦 Migrações de banco (Flask-Migrate)
+
+🧭 Blueprints para organizar o código
+
+☁️ Deploy gratuito (Render, Railway, ou Vercel)
 
 
-
-
+--------------------------------------------------
 
 
 
