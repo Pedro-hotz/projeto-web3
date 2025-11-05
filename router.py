@@ -11,6 +11,14 @@ def home():
 
 # Dessa forma é passado parametros pelo URL 
 # Caso digitar http://127.0.0.1:5000/perfil/pedro vc vai entrar em uma pagina html que mostra o nome passado
-@app.route("/perfil/<nomeUsuario>/<idade>") 
-def perfil(nomeUsuario, idade):
-    return render_template("usuarios.html", nomeUsuario=nomeUsuario, idade=idade)
+# @app.route("/perfil/<nomeUsuario>/<idade>") 
+# def perfil(nomeUsuario, idade):
+#     return render_template("usuarios.html", nomeUsuario=nomeUsuario, idade=idade)
+
+@app.route("/sobre")
+def sobre():
+    return render_template("sobre.html")
+
+@app.route("/doe")
+def doe():
+    return render_template("doe.html")

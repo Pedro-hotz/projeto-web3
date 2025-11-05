@@ -2,38 +2,392 @@
 <html lang="pt-br">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"> <!-- Direciona para o css atual -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"> <!-- Direciona para o css atual -->
 
-    <title>Home</title>
+  <title>Home</title>
 </head>
 
 <body>
 
-    <h2>Preencha seus dados</h2>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-container">
+      <a href="#" class="logo">
+        ❤️ Esperança
+      </a>
+      <nav class="nav">
+        <a href="#missao">Nossa Missão</a>
+        <a href="#atuacao">Áreas de Atuação</a>
+        <a href="#impacto">Impacto</a>
+        <a href="#como-ajudar">Como Ajudar</a>
+        <a id="abrirModalPix" class="btn btn-action">Doar Agora</a>
+      </nav>
+    </div>
+  </header>
 
-  <form id="formPerfil">
-    <label for="nome">Nome:</label>
-    <input type="text" id="nome" name="nome" required><br><br>
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-content">
+      <h1>
+        Transformando Vidas,<br>
+        <span class="gradient-text">Construindo Futuros</span>
+      </h1>
+      <p>Juntos, podemos fazer a diferença. Cada ação conta, cada doação transforma.</p>
+      <div class="hero-buttons">
+        <a href="#" class="btn btn-hero">Fazer uma Doação →</a>
+        <a href="#" class="btn btn-outline">Seja Voluntário</a>
+      </div>
+    </div>
+  </section>
 
-    <label for="idade">Idade:</label>
-    <input type="number" id="idade" name="idade" required><br><br>
+  <!-- Mission Section -->
+  <section id="missao" class="section bg-gradient">
+    <div class="container">
+      <div class="section-header">
+        <h2>Nossa Missão</h2>
+        <div class="section-divider"></div>
+        <p>Promover dignidade, educação e esperança para comunidades em vulnerabilidade, criando oportunidades
+          sustentáveis de desenvolvimento e transformação social.</p>
+      </div>
 
-    <button type="submit">Enviar</button>
-  </form>
+      <div class="grid grid-3">
+        <div class="card">
+          <div class="card-icon">❤️</div>
+          <h3>Compaixão</h3>
+          <p>Agimos com empatia e dedicação para transformar realidades</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">👥</div>
+          <h3>Comunidade</h3>
+          <p>Construímos pontes e fortalecemos laços sociais</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🌍</div>
+          <h3>Impacto Global</h3>
+          <p>Mudanças locais que geram transformações globais</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Cause Areas Section -->
+  <section id="atuacao" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Áreas de Atuação</h2>
+        <div class="section-divider"></div>
+        <p>Trabalhamos em múltiplas frentes para garantir desenvolvimento integral das comunidades</p>
+      </div>
+
+      <div class="grid grid-4">
+        <div class="cause-card">
+          <div class="cause-card-image">
+            <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600" alt="Educação">
+            <div class="cause-card-overlay"></div>
+          </div>
+          <div class="cause-card-content">
+            <h3>🎓 Educação</h3>
+            <p>Construindo futuros através do conhecimento e formação de qualidade</p>
+          </div>
+        </div>
+        <div class="cause-card">
+          <div class="cause-card-image">
+            <img src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=600" alt="Alimentação">
+            <div class="cause-card-overlay"></div>
+          </div>
+          <div class="cause-card-content">
+            <h3>🍽️ Alimentação</h3>
+            <p>Garantindo segurança alimentar e nutrição adequada para famílias</p>
+          </div>
+        </div>
+        <div class="cause-card">
+          <div class="cause-card-image">
+            <img src="https://images.unsplash.com/photo-1541696432-82c1abfe5a53?w=600" alt="Água Potável">
+            <div class="cause-card-overlay"></div>
+          </div>
+          <div class="cause-card-content">
+            <h3>💧 Água Potável</h3>
+            <p>Acesso a água limpa e saneamento básico para comunidades</p>
+          </div>
+        </div>
+        <div class="cause-card">
+          <div class="cause-card-image">
+            <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=600" alt="Moradia">
+            <div class="cause-card-overlay"></div>
+          </div>
+          <div class="cause-card-content">
+            <h3>🏠 Moradia</h3>
+            <p>Construindo lares dignos e seguros para famílias necessitadas</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Impact Section -->
+  <section id="impacto" class="section bg-muted">
+    <div class="container">
+      <div class="section-header">
+        <h2>Nosso Impacto</h2>
+        <div class="section-divider"></div>
+        <p>Números que representam vidas transformadas e esperança renovada</p>
+      </div>
+
+      <div class="grid grid-4">
+        <div class="stats-card">
+          <div style="font-size: 3rem; color: var(--primary);">👥</div>
+          <div class="stats-value">50.000+</div>
+          <div class="stats-label">Vidas Impactadas</div>
+        </div>
+        <div class="stats-card">
+          <div style="font-size: 3rem; color: var(--secondary);">❤️</div>
+          <div class="stats-value">1.200+</div>
+          <div class="stats-label">Voluntários Ativos</div>
+        </div>
+        <div class="stats-card">
+          <div style="font-size: 3rem; color: var(--action);">🏠</div>
+          <div class="stats-value">350+</div>
+          <div class="stats-label">Projetos Realizados</div>
+        </div>
+        <div class="stats-card">
+          <div style="font-size: 3rem; color: var(--primary-light);">🎓</div>
+          <div class="stats-value">25.000+</div>
+          <div class="stats-label">Crianças Educadas</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How to Help Section -->
+  <section id="como-ajudar" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Como Você Pode Ajudar</h2>
+        <div class="section-divider"></div>
+        <p>Existem várias formas de contribuir. Escolha a que mais se conecta com você.</p>
+      </div>
+
+      <div class="grid grid-4">
+        <div class="card" style="text-align: center;">
+          <div class="card-icon" style="margin: 0 auto 1.5rem;">💵</div>
+          <h3>Faça uma Doação</h3>
+          <p>Contribua financeiramente com qualquer valor. Cada centavo faz diferença.</p>
+          <br>
+          <a href="#" class="btn btn-hero">Doar Agora</a>
+        </div>
+        <div class="card" style="text-align: center;">
+          <div class="card-icon"
+            style="margin: 0 auto 1.5rem; background: linear-gradient(135deg, var(--secondary), var(--primary));">👥
+          </div>
+          <h3>Seja Voluntário</h3>
+          <p>Doe seu tempo e talento. Junte-se ao nosso time de voluntários.</p>
+          <br>
+          <a href="#" class="btn btn-action">Inscreva-se</a>
+        </div>
+        <div class="card" style="text-align: center;">
+          <div class="card-icon" style="margin: 0 auto 1.5rem;">📢</div>
+          <h3>Compartilhe</h3>
+          <p>Ajude-nos a alcançar mais pessoas compartilhando nossa missão.</p>
+          <br>
+          <a href="#" class="btn btn-outline"
+            style="color: var(--foreground); border: 2px solid var(--primary);">Compartilhar</a>
+        </div>
+        <div class="card" style="text-align: center;">
+          <div class="card-icon"
+            style="margin: 0 auto 1.5rem; background: linear-gradient(135deg, var(--action), hsl(25, 95%, 65%));">🏢
+          </div>
+          <h3>Parceria Corporativa</h3>
+          <p>Empresas podem apoiar nossos projetos e fazer parte da mudança.</p>
+          <br>
+          <a href="#" class="btn btn-action">Saiba Mais</a>
+        </div>
+      </div>
+
+      <div style="margin-top: 4rem;">
+        <div class="cta-section">
+          <h3>Pronto para Fazer a Diferença?</h3>
+          <p>Cada ação conta. Comece hoje e seja parte da transformação que o mundo precisa.</p>
+          <div class="cta-buttons">
+            <a href="#" class="btn"
+              style="background: white; color: var(--primary); padding: 0.875rem 2rem; font-size: 1.125rem;">Fazer
+              Doação Única</a>
+            <a href="#" class="btn btn-outline" style="padding: 0.875rem 2rem; font-size: 1.125rem;">Doar
+              Mensalmente</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;">
+            <span style="font-size: 2rem;">❤️</span>
+            <span style="font-size: 1.5rem; font-weight: bold;">Esperança</span>
+          </div>
+          <p style="opacity: 0.8; margin-bottom: 1rem;">Transformando vidas através do amor, dedicação e ação
+            comunitária.</p>
+          <div class="social-links">
+            <a href="#" class="social-link">📘</a>
+            <a href="#" class="social-link">📷</a>
+            <a href="#" class="social-link">🐦</a>
+            <a href="#" class="social-link">💼</a>
+          </div>
+        </div>
+
+        <div>
+          <h3>Links Rápidos</h3>
+          <ul>
+            <li><a href="#missao">Nossa Missão</a></li>
+            <li><a href="#atuacao">Áreas de Atuação</a></li>
+            <li><a href="#impacto">Nosso Impacto</a></li>
+            <li><a href="#como-ajudar">Como Ajudar</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h3>Recursos</h3>
+          <ul>
+            <li><a href="#">Blog</a></li>
+            <li><a href="#">Relatórios</a></li>
+            <li><a href="#">Transparência</a></li>
+            <li><a href="#">Contato</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h3>Contato</h3>
+          <ul>
+            <li>📍 Rua da Esperança, 123<br>São Paulo, SP</li>
+            <li>📞 (11) 1234-5678</li>
+            <li>✉️ contato@esperanca.org.br</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>© 2024 ONG Esperança. Todos os direitos reservados. CNPJ: 00.000.000/0001-00</p>
+      </div>
+    </div>
+  </footer>
+
+
+  <!-- MODAL PIX -->
+
+  <div id="modalPix" class="modal-overlay">
+    <div class="modal-conteudo">
+      <button id="fecharModalPix" class="fechar-modal">&times;</button>
+
+      <h2>Faça sua doação via PIX</h2>
+      <p>Escaneie o QR Code ou copie a chave PIX abaixo</p>
+
+      <div class="qr-code-area">
+        <img src="URL_DO_SEU_QR_CODE.png" alt="QR Code para Doação PIX">
+      </div>
+
+      <div class="chave-pix-area">
+        <label for="chavePixInput">Chave PIX Copia e Cola:</label>
+        <div class="input-com-copia">
+          <input type="text" id="chavePixInput" value="00020126360014BR.GOV.BCB.PIX0114exemplo@ong.org" readonly>
+          <button id="btnCopiarPix" title="Copiar Chave PIX" class="btn-copiar">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-files"
+              viewBox="0 0 16 16">
+              <path
+                d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.5-6.5a.5.5 0 0 1 .708 0z" />
+            </svg>
+          </button>
+        </div>
+        <span id="mensagemCopia" class="mensagem-copia"></span>
+      </div>
+
+      <p class="mensagem-doacao">Toda doação ajuda a transformar vidas</p>
+      <p class="mensagem-doacao">Sua contribuição faz a diferença!</p>
+    </div>
+  </div>
+
 
   <script>
-    document.getElementById("formPerfil").addEventListener("submit", function(e) {
-      e.preventDefault(); // não recarrega a página automaticamente
 
-      const nome = document.getElementById("nome").value;
-      const idade = document.getElementById("idade").value;
+    // 1. Seleciona os elementos do DOM
+    const modalPix = document.getElementById('modalPix');
+    const abrirModalBtn = document.getElementById('abrirModalPix');
+    const fecharModalBtn = document.getElementById('fecharModalPix');
+    const btnCopiarPix = document.getElementById('btnCopiarPix');
+    const chavePixInput = document.getElementById('chavePixInput');
+    const mensagemCopia = document.getElementById('mensagemCopia');
 
-      // monta a rota no formato esperado
-      window.location.href = `/perfil/${nome}/${idade}`;
+    // 2. Função para abrir a modal
+    const abrirModal = () => {
+      modalPix.style.display = 'flex'; // Altera de 'none' para 'flex'
+    };
+
+    // 3. Função para fechar a modal
+    const fecharModal = () => {
+      modalPix.style.display = 'none'; // Altera de 'flex' para 'none'
+      // Limpa a mensagem de cópia ao fechar
+      mensagemCopia.textContent = '';
+    };
+
+    // 4. Função para copiar a chave PIX
+    const copiarChavePix = () => {
+      // Tenta usar a API navigator.clipboard para copiar (método moderno)
+      navigator.clipboard.writeText(chavePixInput.value)
+        .then(() => {
+          mensagemCopia.textContent = 'Chave PIX copiada com sucesso!';
+          // Limpa a mensagem após 3 segundos
+          setTimeout(() => {
+            mensagemCopia.textContent = '';
+          }, 3000);
+        })
+        .catch(err => {
+          // Fallback para navegadores mais antigos (método de seleção)
+          console.error('Falha ao usar API Clipboard, usando fallback:', err);
+          chavePixInput.select();
+          document.execCommand('copy');
+          mensagemCopia.textContent = 'Chave PIX copiada (Fallback)!';
+          setTimeout(() => {
+            mensagemCopia.textContent = '';
+          }, 3000);
+        });
+    };
+
+    // 5. Adiciona os Event Listeners
+
+    // Abre a modal ao clicar no botão de doação
+    abrirModalBtn.addEventListener('click', abrirModal);
+
+    // Fecha a modal ao clicar no 'X'
+    fecharModalBtn.addEventListener('click', fecharModal);
+
+    // Fecha a modal ao clicar no fundo escuro (overlay)
+    modalPix.addEventListener('click', (event) => {
+      if (event.target === modalPix) {
+        fecharModal();
+      }
     });
-  </script>
 
+    // Copia a chave PIX ao clicar no botão de cópia
+    btnCopiarPix.addEventListener('click', copiarChavePix);
+
+    // Opcional: Fechar com a tecla ESC
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && modalPix.style.display === 'flex') {
+        fecharModal();
+      }
+    });
+
+    // document.getElementById("formPerfil").addEventListener("submit", function(e) {
+    //   e.preventDefault(); // não recarrega a página automaticamente
+
+    // monta a rota no formato esperado
+    // window.location.href = `/perfil/${nome}/${idade}`;
+    // });
+  </script>
 </body>
+
 </html>
