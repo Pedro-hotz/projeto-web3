@@ -24,6 +24,27 @@ body {
   background: var(--background);
 }
 
+.modal-overlay {
+  display: none;
+  /* Inicialmente oculta */
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-conteudo {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 300px;
+  text-align: center;
+}
+
 /* Header */
 .header {
   position: fixed;
@@ -61,7 +82,7 @@ body {
 .nav {
   display: flex;
   align-items: center;
-  gap: 2rem;
+  gap: 1.5rem;
 }
 
 .nav a {
@@ -92,6 +113,16 @@ body {
 
 .btn-action:hover {
   background: hsl(25, 95%, 45%);
+  color: white !important;
+}
+
+.btn-action.login {
+  background: hsl(202, 100%, 50%);
+}
+
+.btn-action.login:hover {
+  background: hsl(202, 100%, 43%);
+  color: white;
 }
 
 .btn-hero {
@@ -243,7 +274,7 @@ body {
 .card-icon {
   width: 4rem;
   height: 4rem;
-  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  background: linear-gradient(135deg, var(--background), var(--primary-light));
   border-radius: 1rem;
   display: flex;
   align-items: center;
@@ -434,13 +465,14 @@ body {
 
 /* Estilos básicos para o botão */
 .btn-doacao {
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-    background-color: #007bff; /* Cor de destaque */
-    color: white;
-    border: none;
-    border-radius: 5px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  background-color: #007bff;
+  /* Cor de destaque */
+  color: white;
+  border: none;
+  border-radius: 5px;
 }
 
 /* ---------------------------------- */
@@ -449,111 +481,240 @@ body {
 
 /* Overlay - Fundo escuro que cobre toda a tela */
 .modal-overlay {
-    /* Esconde a modal por padrão */
-    display: none; 
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.7); /* Fundo semi-transparente */
-    justify-content: center;
-    align-items: center;
-    z-index: 1000; /* Garante que fique acima de tudo */
+  /* Esconde a modal por padrão */
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  /* Fundo semi-transparente */
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  /* Garante que fique acima de tudo */
 }
 
 /* Conteúdo principal da modal */
 .modal-conteudo {
-    background: #fff;
-    padding: 30px;
-    border-radius: 10px;
-    max-width: 400px;
-    width: 90%;
-    text-align: center;
-    position: relative;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  background: #fff;
+  padding: 30px;
+  border-radius: 10px;
+  max-width: 400px;
+  width: 90%;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 /* Botão de Fechar (X) */
 .fechar-modal {
-    position: absolute;
-    top: 10px;
-    right: 15px;
-    background: none;
-    border: none;
-    font-size: 24px;
-    cursor: pointer;
-    color: #888;
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #888;
 }
 
 /* Título e textos */
 .modal-conteudo h2 {
-    color: #333;
-    margin-top: 0;
+  color: #333;
+  margin-top: 0;
 }
 
 /* QR Code */
 .qr-code-area {
-    padding: 20px;
-    margin: 15px 0;
-    border: 1px solid #ddd;
-    border-radius: 5px;
+  padding: 20px;
+  margin: 15px 0;
+  border: 1px solid #ddd;
+  border-radius: 5px;
 }
+
 .qr-code-area img {
-    max-width: 100%;
-    height: auto;
-    display: block;
-    margin: 0 auto;
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
 }
 
 /* Área da Chave PIX */
 .chave-pix-area {
-    margin: 20px 0;
+  margin: 20px 0;
 }
+
 .chave-pix-area label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-    text-align: left;
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  text-align: left;
 }
+
 .input-com-copia {
-    display: flex;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    overflow: hidden;
+  display: flex;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  overflow: hidden;
 }
+
 #chavePixInput {
-    flex-grow: 1;
-    border: none;
-    padding: 10px;
-    font-size: 14px;
-    background-color: #f7f7f7;
-    cursor: text;
+  flex-grow: 1;
+  border: none;
+  padding: 10px;
+  font-size: 14px;
+  background-color: #f7f7f7;
+  cursor: text;
 }
+
 .btn-copiar {
-    background-color: #e9ecef;
-    border: none;
-    padding: 10px 15px;
-    cursor: pointer;
-    transition: background-color 0.2s;
+  background-color: #e9ecef;
+  border: none;
+  padding: 10px 15px;
+  cursor: pointer;
+  transition: background-color 0.2s;
 }
+
 .btn-copiar:hover {
-    background-color: #dee2e6;
+  background-color: #dee2e6;
 }
 
 /* Mensagens de Doação */
 .mensagem-doacao {
-    font-size: 14px;
-    color: #666;
+  font-size: 14px;
+  color: #666;
 }
 
 /* Mensagem de Cópia */
 .mensagem-copia {
-    display: block;
-    height: 14px;
-    margin-top: 5px;
-    font-size: 12px;
-    color: green;
+  display: block;
+  height: 14px;
+  margin-top: 5px;
+  font-size: 12px;
+  color: green;
+}
+
+.contato-container {
+  background-color: var(--background);
+  margin-bottom: 8vh;
+  text-align: center;
+  padding: 4vh;
+  border-radius: 2vh;
+
+  h1 {
+    color: #1ea9c6;
+    font-size: 3rem;
+    margin-bottom: -1rem;
+  }
+
+  p {
+    color: #333;
+    font-size: 1.5rem;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+  }
+
+  button {
+    background-color: #FF9500;
+    height: 5vh;
+    width: 20%;
+    font-size: 2vh;
+    border-radius: 4vh;
+  }
+}
+
+.form-container {
+  width: 98%;
+  margin: 0 auto 2rem;
+  max-width: 90vh;
+  display: flex;
+  flex-direction: column;
+  gap: 2.3vh;
+  font-size: 2vh;
+
+  .form-group {
+    width: 100%;
+    position: relative;
+    flex: 1 1 calc(33% - 15px);
+    min-width: 200px;
+
+    input,
+    textarea {
+      width: 100%;
+      padding: 14px 12px;
+      font-size: 2.5vh;
+      border: 1.5px solid #ccc;
+      border-radius: 6px;
+      background-color: white !important;
+      color: #474747;
+      outline: none;
+    }
+
+    /* Apenas os selects terão a seta */
+    select {
+      width: 100%;
+      padding: 14px 12px;
+      font-size: 2.5vh;
+      border: 1.5px solid #ccc;
+      border-radius: 6px;
+      background-color: white !important;
+      /* mantém sempre branco */
+      color: #474747;
+      outline: none;
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+
+      background-image: url("data:image/svg+xml,%3Csvg fill='gray' height='20' viewBox='0 0 24 24' width='20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      background-size: 18px;
+    }
+
+    label {
+      position: absolute;
+      left: 14px;
+      top: 18px;
+      font-size: 2vh;
+      color: #949494;
+      pointer-events: none;
+      transition: 0.2s ease all;
+      padding: 0 4px;
+    }
+
+    &:focus {
+      background-color: rgb(255, 255, 255) !important;
+    }
+
+    input:focus+label,
+    input:not(:placeholder-shown)+label,
+    select:focus+label,
+    select.ng-valid+label,
+    textarea:focus+label,
+    textarea:not(:placeholder-shown)+label {
+      top: -2vh;
+      left: 10px;
+      font-size: 1.8vh;
+      color: #00e0d5;
+    }
+  }
+
+  &:-webkit-autofill,
+  &:-webkit-autofill:hover,
+  &:-webkit-autofill:focus,
+  &:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0px 1000px white inset !important;
+    box-shadow: 0 0 0px 1000px white inset !important;
+    background-color: white !important;
+    color: #474747 !important;
+    -webkit-text-fill-color: #474747 !important;
+  }
+
+  .form-group.full {
+    flex: 1 1 100%;
+  }
 }
 
 @media (max-width: 768px) {

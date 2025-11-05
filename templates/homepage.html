@@ -23,6 +23,7 @@
         <a href="#impacto">Impacto</a>
         <a href="#como-ajudar">Como Ajudar</a>
         <a id="abrirModalPix" class="btn btn-action">Doar Agora</a>
+        <a id="abrirModalLogin" class="btn btn-action login">Entrar</a>
       </nav>
     </div>
   </header>
@@ -278,7 +279,6 @@
 
 
   <!-- MODAL PIX -->
-
   <div id="modalPix" class="modal-overlay">
     <div class="modal-conteudo">
       <button id="fecharModalPix" class="fechar-modal">&times;</button>
@@ -311,6 +311,37 @@
   </div>
 
 
+  <!-- MODAL LOGIN -->
+  <div id="modalLogin" class="modal-overlay">
+    <section id="lead">
+      <div class="container-comentarios">
+        <br><br>
+
+        <div class="contato-container">
+          <h1 id="contato">Tem uma escola ou cantina?</h1><br>
+
+          <form>
+            <div class="form-container">
+              <div class="form-group">
+                <input placeholder="" id="email" type="text">
+                <label for="email">E-mail</label>
+              </div>
+
+              <div class="form-group">
+                <input placeholder="" id="tel" type="password">
+                <label for="senha">Senha</label>
+              </div>
+            </div>
+            <button type="submit">
+              ff
+            </button>
+          </form>
+        </div>
+      </div>
+    </section>
+  </div>
+
+
   <script>
 
     // 1. Seleciona os elementos do DOM
@@ -320,6 +351,12 @@
     const btnCopiarPix = document.getElementById('btnCopiarPix');
     const chavePixInput = document.getElementById('chavePixInput');
     const mensagemCopia = document.getElementById('mensagemCopia');
+
+    const modalLogin = document.getElementById('modalLogin');
+    const abrirModalLoginBtn = document.getElementById('abrirModalLogin');
+    const fecharModalLoginBtn = document.getElementById('fecharModalLogin');
+    const formLogin = document.getElementById('formLogin');
+    const mensagemLogin = document.getElementById('mensagemLogin')
 
     // 2. Função para abrir a modal
     const abrirModal = () => {
@@ -332,6 +369,54 @@
       // Limpa a mensagem de cópia ao fechar
       mensagemCopia.textContent = '';
     };
+
+    // 2. Função para abrir a modal
+    const abrirModalLogin = () => {
+      modalLogin.style.display = 'flex';
+    };
+
+    // 3. Função para fechar a modal
+    const fecharModalLogin = () => {
+      modalLogin.style.display = 'none';
+      mensagemLogin.textContent = '';
+    };
+
+    const enviarLogin = (event) => {
+      event.preventDefault();
+
+      const email = document.getElementById('emailLogin').value;
+      const senha = document.getElementById('senhaLogin').value;
+
+      // Simulação de validação simples
+      if (email === 'teste@exemplo.com' && senha === '1234') {
+        mensagemLogin.textContent = 'Login realizado com sucesso!';
+        mensagemLogin.style.color = 'green';
+
+        setTimeout(() => {
+          fecharModalLogin();
+        }, 2000);
+      } else {
+        mensagemLogin.textContent = 'Email ou senha incorretos!';
+        mensagemLogin.style.color = 'red';
+      }
+    };
+
+    abrirModalLoginBtn.addEventListener('click', abrirModalLogin);
+    fecharModalLoginBtn.addEventListener('click', fecharModalLogin);
+
+    // Fecha ao clicar no fundo escuro
+    modalLogin.addEventListener('click', (event) => {
+      if (event.target === modalLogin) {
+        fecharModalLogin();
+      }
+    });
+
+    // Fecha com ESC
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && modalLogin.style.display === 'flex') {
+        fecharModalLogin();
+      }
+    });
 
     // 4. Função para copiar a chave PIX
     const copiarChavePix = () => {
