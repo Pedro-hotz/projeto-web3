@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"> <!-- Direciona para o css atual -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"> <!-- Direciona para o css atual -->
 
   <title>Home</title>
 </head>
@@ -37,8 +37,7 @@
       </h1>
       <p>Juntos, podemos fazer a diferença. Cada ação conta, cada doação transforma.</p>
       <div class="hero-buttons">
-        <a href="#" class="btn btn-hero">Fazer uma Doação →</a>
-        <a href="#" class="btn btn-outline">Seja Voluntário</a>
+        <a id="abrirModalPix" class="btn btn-action">Doar Agora</a>
       </div>
     </div>
   </section>
@@ -315,11 +314,11 @@
   <div id="modalLogin" class="modal-overlay">
     <section id="lead">
       <div class="container-comentarios">
-        <br><br>
-
         <div class="contato-container">
-          <h1 id="contato">Tem uma escola ou cantina?</h1><br>
 
+          <h1 id="contato">Faça seu login</h1>
+          <p>Entre com suas credenciais para acessar sua conta</p>
+          <button id="fecharModalLogin" class="fechar-modal">&times;</button>
           <form>
             <div class="form-container">
               <div class="form-group">
@@ -328,12 +327,12 @@
               </div>
 
               <div class="form-group">
-                <input placeholder="" id="tel" type="password">
+                <input placeholder="" id="senhaLogin" type="password">
                 <label for="senha">Senha</label>
               </div>
             </div>
             <button type="submit">
-              ff
+              Entrar
             </button>
           </form>
         </div>
@@ -342,137 +341,7 @@
   </div>
 
 
-  <script>
-
-    // 1. Seleciona os elementos do DOM
-    const modalPix = document.getElementById('modalPix');
-    const abrirModalBtn = document.getElementById('abrirModalPix');
-    const fecharModalBtn = document.getElementById('fecharModalPix');
-    const btnCopiarPix = document.getElementById('btnCopiarPix');
-    const chavePixInput = document.getElementById('chavePixInput');
-    const mensagemCopia = document.getElementById('mensagemCopia');
-
-    const modalLogin = document.getElementById('modalLogin');
-    const abrirModalLoginBtn = document.getElementById('abrirModalLogin');
-    const fecharModalLoginBtn = document.getElementById('fecharModalLogin');
-    const formLogin = document.getElementById('formLogin');
-    const mensagemLogin = document.getElementById('mensagemLogin')
-
-    // 2. Função para abrir a modal
-    const abrirModal = () => {
-      modalPix.style.display = 'flex'; // Altera de 'none' para 'flex'
-    };
-
-    // 3. Função para fechar a modal
-    const fecharModal = () => {
-      modalPix.style.display = 'none'; // Altera de 'flex' para 'none'
-      // Limpa a mensagem de cópia ao fechar
-      mensagemCopia.textContent = '';
-    };
-
-    // 2. Função para abrir a modal
-    const abrirModalLogin = () => {
-      modalLogin.style.display = 'flex';
-    };
-
-    // 3. Função para fechar a modal
-    const fecharModalLogin = () => {
-      modalLogin.style.display = 'none';
-      mensagemLogin.textContent = '';
-    };
-
-    const enviarLogin = (event) => {
-      event.preventDefault();
-
-      const email = document.getElementById('emailLogin').value;
-      const senha = document.getElementById('senhaLogin').value;
-
-      // Simulação de validação simples
-      if (email === 'teste@exemplo.com' && senha === '1234') {
-        mensagemLogin.textContent = 'Login realizado com sucesso!';
-        mensagemLogin.style.color = 'green';
-
-        setTimeout(() => {
-          fecharModalLogin();
-        }, 2000);
-      } else {
-        mensagemLogin.textContent = 'Email ou senha incorretos!';
-        mensagemLogin.style.color = 'red';
-      }
-    };
-
-    abrirModalLoginBtn.addEventListener('click', abrirModalLogin);
-    fecharModalLoginBtn.addEventListener('click', fecharModalLogin);
-
-    // Fecha ao clicar no fundo escuro
-    modalLogin.addEventListener('click', (event) => {
-      if (event.target === modalLogin) {
-        fecharModalLogin();
-      }
-    });
-
-    // Fecha com ESC
-    document.addEventListener('keydown', (event) => {
-      if (event.key === 'Escape' && modalLogin.style.display === 'flex') {
-        fecharModalLogin();
-      }
-    });
-
-    // 4. Função para copiar a chave PIX
-    const copiarChavePix = () => {
-      // Tenta usar a API navigator.clipboard para copiar (método moderno)
-      navigator.clipboard.writeText(chavePixInput.value)
-        .then(() => {
-          mensagemCopia.textContent = 'Chave PIX copiada com sucesso!';
-          // Limpa a mensagem após 3 segundos
-          setTimeout(() => {
-            mensagemCopia.textContent = '';
-          }, 3000);
-        })
-        .catch(err => {
-          // Fallback para navegadores mais antigos (método de seleção)
-          console.error('Falha ao usar API Clipboard, usando fallback:', err);
-          chavePixInput.select();
-          document.execCommand('copy');
-          mensagemCopia.textContent = 'Chave PIX copiada (Fallback)!';
-          setTimeout(() => {
-            mensagemCopia.textContent = '';
-          }, 3000);
-        });
-    };
-
-    // 5. Adiciona os Event Listeners
-
-    // Abre a modal ao clicar no botão de doação
-    abrirModalBtn.addEventListener('click', abrirModal);
-
-    // Fecha a modal ao clicar no 'X'
-    fecharModalBtn.addEventListener('click', fecharModal);
-
-    // Fecha a modal ao clicar no fundo escuro (overlay)
-    modalPix.addEventListener('click', (event) => {
-      if (event.target === modalPix) {
-        fecharModal();
-      }
-    });
-
-    // Copia a chave PIX ao clicar no botão de cópia
-    btnCopiarPix.addEventListener('click', copiarChavePix);
-
-    // Opcional: Fechar com a tecla ESC
-    document.addEventListener('keydown', (event) => {
-      if (event.key === 'Escape' && modalPix.style.display === 'flex') {
-        fecharModal();
-      }
-    });
-
-    // document.getElementById("formPerfil").addEventListener("submit", function(e) {
-    //   e.preventDefault(); // não recarrega a página automaticamente
-
-    // monta a rota no formato esperado
-    // window.location.href = `/perfil/${nome}/${idade}`;
-    // });
-  </script>
+  <script src="{{ url_for('static', filename='js/homepage.js') }}"></script>
 </body>
 
 </html>

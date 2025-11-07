@@ -517,7 +517,7 @@ body {
   border: none;
   font-size: 24px;
   cursor: pointer;
-  color: #888;
+  color: #363636;
 }
 
 /* Título e textos */
@@ -603,10 +603,19 @@ body {
   padding: 4vh;
   border-radius: 2vh;
 
+  .fechar-modal {
+    position: fixed;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #363636;
+  }
+
   h1 {
     color: #1ea9c6;
     font-size: 3rem;
-    margin-bottom: -1rem;
+    margin-bottom: 0rem;
   }
 
   p {
@@ -625,13 +634,14 @@ body {
   }
 }
 
+
 .form-container {
   width: 98%;
   margin: 0 auto 2rem;
   max-width: 90vh;
   display: flex;
   flex-direction: column;
-  gap: 2.3vh;
+  gap: 4vh;
   font-size: 2vh;
 
   .form-group {
@@ -694,7 +704,7 @@ body {
     select.ng-valid+label,
     textarea:focus+label,
     textarea:not(:placeholder-shown)+label {
-      top: -2vh;
+      top: -3vh;
       left: 10px;
       font-size: 1.8vh;
       color: #00e0d5;
