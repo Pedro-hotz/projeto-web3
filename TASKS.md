@@ -1,26 +1,15 @@
 # ============ QUADRO DE TAREFAS ===================
 
-[ ] Desenvolver tela home 
+[ ] Fazer backoffice 
 
-[ ] Criar e componentizar o footer
+[ ] Ajustar botão de fechar das modais 
 
-[ ] Criar e componentizar o header
+[ ] Ver sobre responsividade 
 
-[ ] Criar a tela de contato 
+[ ] Conectar com o banco de dados
 
-[ ] Implementar tela de doação
+[ ] Rodar banco local 
 
-[ ] Criar tela sobre a ONG
-
-[ ] Criar BackOffice para ONG 
-
-[ ] Tela de Login para BackOffice
-
-[ ] Criar dashboard mostrando taxas (Acessos ao site, doação)
-
-[ ] Ver sobre segurança do Site 
-
-[ ] Fazer conexão e criar o banco de dados
 
 # =======================================================
 
