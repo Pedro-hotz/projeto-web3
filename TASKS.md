@@ -2,11 +2,11 @@
 
 [ ] Fazer backoffice 
 
-[ ] Ajustar botão de fechar das modais 
-
 [ ] Ver sobre responsividade 
 
-[ ] Conectar com o banco de dados
+[ ] Serviço de email 
+
+[-] Conectar com o banco de dados
 
 [ ] Rodar banco local 
 

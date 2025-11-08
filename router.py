@@ -1,5 +1,5 @@
 from main import app
-from flask import render_template
+from flask import render_template #, request
 
 ## Aqui nos chamamos todas as rotas
 
@@ -15,8 +15,11 @@ def home():
 # def perfil(nomeUsuario, idade):
 #     return render_template("usuarios.html", nomeUsuario=nomeUsuario, idade=idade)
 
-@app.route("/sobre")
+@app.route("/sobre") #, methods=["GET", "POST"]
 def sobre():
+    # if request.method == "POST":
+    #     # Aqui você pode processar os dados do formulário
+    #     pass
     return render_template("sobre.html")
 
 @app.route("/doe")

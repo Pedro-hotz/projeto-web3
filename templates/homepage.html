@@ -22,8 +22,8 @@
         <a href="#atuacao">Áreas de Atuação</a>
         <a href="#impacto">Impacto</a>
         <a href="#como-ajudar">Como Ajudar</a>
-        <a id="abrirModalPix" class="btn btn-action">Doar Agora</a>
-        <a id="abrirModalLogin" class="btn btn-action login">Entrar</a>
+        <a data-abrir-modal="pix" class="btn btn-action">Doar Agora</a>
+        <a data-abrir-modal="login" class="btn btn-action login">Entrar</a>
       </nav>
     </div>
   </header>
@@ -37,7 +37,7 @@
       </h1>
       <p>Juntos, podemos fazer a diferença. Cada ação conta, cada doação transforma.</p>
       <div class="hero-buttons">
-        <a id="abrirModalPix" class="btn btn-action">Doar Agora</a>
+        <a data-abrir-modal="pix" class="btn btn-action">Doar Agora</a>
       </div>
     </div>
   </section>
@@ -175,7 +175,7 @@
           <h3>Faça uma Doação</h3>
           <p>Contribua financeiramente com qualquer valor. Cada centavo faz diferença.</p>
           <br>
-          <a href="#" class="btn btn-hero">Doar Agora</a>
+          <a data-abrir-modal="pix" class="btn btn-action">Doar Agora</a>
         </div>
         <div class="card" style="text-align: center;">
           <div class="card-icon"
@@ -184,7 +184,7 @@
           <h3>Seja Voluntário</h3>
           <p>Doe seu tempo e talento. Junte-se ao nosso time de voluntários.</p>
           <br>
-          <a href="#" class="btn btn-action">Inscreva-se</a>
+          <a data-abrir-modal="lead" class="btn btn-action">Inscrever-se</a>
         </div>
         <div class="card" style="text-align: center;">
           <div class="card-icon" style="margin: 0 auto 1.5rem;">📢</div>
@@ -210,11 +210,9 @@
           <h3>Pronto para Fazer a Diferença?</h3>
           <p>Cada ação conta. Comece hoje e seja parte da transformação que o mundo precisa.</p>
           <div class="cta-buttons">
-            <a href="#" class="btn"
-              style="background: white; color: var(--primary); padding: 0.875rem 2rem; font-size: 1.125rem;">Fazer
-              Doação Única</a>
-            <a href="#" class="btn btn-outline" style="padding: 0.875rem 2rem; font-size: 1.125rem;">Doar
-              Mensalmente</a>
+            <a data-abrir-modal="pix" class="btn btn-action">Doe Agora</a>
+            <a data-abrir-modal="lead" class="btn btn-action"
+              style="background-color: hsl(227.08deg 100% 57.14%);">Inscrever-se</a>
           </div>
         </div>
       </div>
@@ -278,9 +276,9 @@
 
 
   <!-- MODAL PIX -->
-  <div id="modalPix" class="modal-overlay">
+  <div class="modal-overlay" data-modal="pix">
     <div class="modal-conteudo">
-      <button id="fecharModalPix" class="fechar-modal">&times;</button>
+      <button data-fechar-modal="pix" class="fechar-modal">&times;</button>
 
       <h2>Faça sua doação via PIX</h2>
       <p>Escaneie o QR Code ou copie a chave PIX abaixo</p>
@@ -310,34 +308,72 @@
   </div>
 
 
+
   <!-- MODAL LOGIN -->
-  <div id="modalLogin" class="modal-overlay">
-    <section id="lead">
-      <div class="container-comentarios">
-        <div class="contato-container">
+  <div class="modal-overlay" data-modal="login">
+    <div class="modal-conteudo login">
+      <button data-fechar-modal="login" class="fechar-modal">&times;</button>
+      <section id="lead">
+        <div class="container-comentarios">
+          <div class="contato-container">
+            <h1>Faça seu login </h1>
+            <p>Entre com suas credenciais para acessar sua conta</p>
+            <form id="formLogin">
+              <div class="form-container">
+                <div class="form-group">
+                  <input placeholder="" id="email" type="text">
+                  <label for="email">E-mail</label>
+                </div>
 
-          <h1 id="contato">Faça seu login</h1>
-          <p>Entre com suas credenciais para acessar sua conta</p>
-          <button id="fecharModalLogin" class="fechar-modal">&times;</button>
-          <form>
-            <div class="form-container">
-              <div class="form-group">
-                <input placeholder="" id="email" type="text">
-                <label for="email">E-mail</label>
+                <div class="form-group">
+                  <input placeholder="" id="senhaLogin" type="password">
+                  <label for="senha">Senha</label>
+                </div>
               </div>
-
-              <div class="form-group">
-                <input placeholder="" id="senhaLogin" type="password">
-                <label for="senha">Senha</label>
-              </div>
-            </div>
-            <button type="submit">
-              Entrar
-            </button>
-          </form>
+              <button type="submit">Entrar</button>
+              <p id="mensagemLogin"></p>
+            </form>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </div>
+  </div>
+
+  <!-- MODAL LEAD -->
+  <div class="modal-overlay" data-modal="lead">
+    <div class="modal-conteudo login">
+      <button data-fechar-modal="lead" class="fechar-modal">&times;</button>
+      <section id="lead">
+        <div class="container-comentarios">
+          <div class="contato-container">
+
+            <h1>Seja um voluntário</h1>
+            <p>Preencha as informações abaixo para entrarmos em contato</p>
+
+            <form id="formLead">
+              <div class="form-container">
+                <div class="form-group">
+                  <input placeholder="" id="email" type="text">
+                  <label for="email">E-mail</label>
+                </div>
+
+                <div class="form-group">
+                  <input placeholder="" id="tel" type="tel" mask="(00) 00000-0000">
+                  <label for="tel">Telefone</label>
+                </div>
+
+                <div class="form-group">
+                  <textarea placeholder="" id="txt"></textarea>
+                  <label for="txt">Mensagem</label>
+                </div>
+              </div>
+              <a href="mailto:pfh92006@gmail.com?subject=Olá&body=This%20is%20a%20test">Send Email</a>
+              <!--Trocar para email da ONG-->
+            </form>
+          </div>
+        </div>
+      </section>
+    </div>
   </div>
 
 
