@@ -35,4 +35,45 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
   });
+
+
 });
+
+const btnCopiarPix = document.getElementById('btnCopiarPix');
+const chavePixInput = document.getElementById('chavePixInput');
+const mensagemCopia = document.getElementById('mensagemCopia');
+
+const copiarChavePix = () => {
+  if (!chavePixInput) return;
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(chavePixInput.value).then(() => {
+      if (mensagemCopia) mensagemCopia.textContent = 'Chave PIX copiada com sucesso!';
+      setTimeout(() => {
+        if (mensagemCopia) mensagemCopia.textContent = '';
+      }, 3000);
+    }).catch(err => {
+      fallbackCopy();
+    });
+  } else { // fallback antigo
+    fallbackCopy();
+  }
+  function fallbackCopy() {
+    try {
+      chavePixInput.select();
+      document.execCommand('copy'); 5
+      if (mensagemCopia) mensagemCopia.textContent = 'Chave PIX copiada (Fallback)!';
+      setTimeout(() => {
+        if (mensagemCopia) mensagemCopia.textContent = '';
+      }, 3000);
+    } catch (err) {
+      console.error('Não foi possível copiar a chave PIX', err);
+      if (mensagemCopia) mensagemCopia.textContent = 'Erro ao copiar chave PIX';
+    }
+  }
+};
+
+if (btnCopiarPix)
+  btnCopiarPix.addEventListener('click', copiarChavePix);
+else
+  console.warn('btnCopiarPix não encontrado (id="btnCopiarPix")');
+

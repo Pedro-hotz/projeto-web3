@@ -487,7 +487,7 @@ body {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
-.modal-conteudo.login{
+.modal-conteudo.login {
   background: #fff;
   padding: 15px;
   border-radius: 10px;
@@ -613,6 +613,17 @@ body {
     font-size: 1.5rem;
     line-height: 1.6;
     margin-bottom: 1rem;
+  }
+
+  a {
+    background-color: #FF9500;
+    padding: 2vh;
+    text-decoration: none;
+    /* Remove o sublinhado */
+    color: inherit;
+    /* Mantém a cor do texto padrão */
+    font-size: 2vh;
+    border-radius: 4vh;
   }
 
   button {

@@ -1,21 +1,15 @@
 # ============ QUADRO DE TAREFAS ===================
 
-[ ] Fazer backoffice 
+[-] Fazer backoffice 
 
 [ ] Ver sobre responsividade 
 
-[ ] Serviço de email 
+[+] Serviço de email 
 
-[-] Conectar com o banco de dados
+[+] Conectar com o banco de dados
 
-[ ] Rodar banco local 
+[+] Rodar banco local 
 
 
 # =======================================================
 
-
-# PEDRO ===============================================
-# + Ver como fazer o back-end aqui                   ||
-#                                                    ||
-# + Como mandar  JSON / PAYLOAD                      ||
-# =====================================================

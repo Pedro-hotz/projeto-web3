@@ -1,5 +1,7 @@
-from main import app
-from flask import render_template #, request
+import os
+from main import app, db, Tarefa, mail
+from flask import jsonify, redirect, render_template, request, url_for
+from flask_mail import Message
 
 ## Aqui nos chamamos todas as rotas
 
@@ -22,6 +24,64 @@ def sobre():
     #     pass
     return render_template("sobre.html")
 
-@app.route("/doe")
-def doe():
-    return render_template("doe.html")
+
+# Exemplo de Rota (para testar)
+@app.route('/teste_conexao')
+def teste_conexao():
+    try:
+        # 1. Tentar INSERIR um novo registro
+        # O ID deve ser gerado automaticamente
+        tarefa_teste = Tarefa(titulo='Tarefa de Conexão OK', completa=False)
+        db.session.add(tarefa_teste)
+        db.session.commit()
+        
+        # 2. Tentar CONSULTAR o registro
+        ultima_tarefa = Tarefa.query.order_by(Tarefa.id.desc()).first()
+        
+        if ultima_tarefa.titulo == 'Tarefa de Conexão OK':
+            return f'✅ **SUCESSO!** Conexão estabelecida e teste de leitura/escrita OK. O ID da tarefa inserida é: {ultima_tarefa.id}'
+        else:
+            return f'⚠️ **ERRO NA LEITURA.** A escrita parece ter funcionado, mas o registro lido é diferente.'
+
+    except Exception as e:
+        # Se ocorrer qualquer erro (conexão, credenciais, etc.), ele será capturado aqui
+        db.session.rollback() # Garante que a transação é desfeita em caso de erro
+        return f'❌ **FALHA NA CONEXÃO OU OPERAÇÃO:** Verifique seu container Docker e suas credenciais. Erro: {e}'
+    
+
+
+
+@app.route('/enviarEmail', methods=['POST'])
+def enviarEmail():
+   if request.method == 'POST': 
+       nome = request.form['nome']
+       email = request.form['email']
+       telefone = request.form['tel']
+       mensagem = request.form['txt']
+
+       meu_email_autenticado = os.getenv('MAIL_USERNAME')  # O remetente AUTENTICADO
+
+    
+    # Criação da Mensagem
+       msg = Message(
+       # 1. Subject: Identifica o remetente real e o destino
+        subject=f'Mensagem do Usuário: {nome} <{email}>',
+        
+        # 2. Sender: Deve ser sua conta autenticada
+        sender=meu_email_autenticado,
+        
+        # 3. Recipients: O e-mail que recebe a mensagem (você)
+        recipients=[meu_email_autenticado], 
+        
+        # 4. Reply-To: Faz com que "Responder" vá direto para o usuário
+        reply_to=email,
+
+        body=f'Nome: {nome}\nEmail de Contato: {email}\nTelefone: {telefone}\nMensagem:\n{mensagem}'
+    )
+                     
+       try:
+           mail.send(msg)
+           return redirect(url_for("home"))
+       
+       except Exception as e:
+           return jsonify({'status': 'erro', 'mensagem': f'Falha ao enviar e-mail: {e}'})

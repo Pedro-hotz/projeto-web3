@@ -191,7 +191,7 @@
           <h3>Compartilhe</h3>
           <p>Ajude-nos a alcançar mais pessoas compartilhando nossa missão.</p>
           <br>
-          <a href="#" class="btn btn-outline"
+          <a hr ef="#" class="btn btn-outline"
             style="color: var(--foreground); border: 2px solid var(--primary);">Compartilhar</a>
         </div>
         <div class="card" style="text-align: center;">
@@ -201,7 +201,7 @@
           <h3>Parceria Corporativa</h3>
           <p>Empresas podem apoiar nossos projetos e fazer parte da mudança.</p>
           <br>
-          <a href="#" class="btn btn-action">Saiba Mais</a>
+          <a href="#" class="btn btn-action">Saiba Mais</a> <!-- Lead ?  -->
         </div>
       </div>
 
@@ -350,32 +350,38 @@
             <h1>Seja um voluntário</h1>
             <p>Preencha as informações abaixo para entrarmos em contato</p>
 
-            <form id="formLead">
+            <form id="formLead" method="post" action="/enviarEmail">
               <div class="form-container">
+
                 <div class="form-group">
-                  <input placeholder="" id="email" type="text">
-                  <label for="email">E-mail</label>
+                  <input placeholder="" id="nome" name="nome" type="text">
+                  <label for="nome">Nome</label>
                 </div>
 
                 <div class="form-group">
-                  <input placeholder="" id="tel" type="tel" mask="(00) 00000-0000">
-                  <label for="tel">Telefone</label>
+                  <input placeholder="" id="email" name="email" type="text">
+                  <label for="email" required>E-mail</label>
                 </div>
 
                 <div class="form-group">
-                  <textarea placeholder="" id="txt"></textarea>
-                  <label for="txt">Mensagem</label>
+                  <input placeholder="" id="tel" name="tel" type="tel">
+                  <label for="tel" required>Telefone</label>
+                </div>
+
+                <div class="form-group">
+                  <textarea placeholder="" id="txt" name="txt"></textarea>
+                  <label for="txt"rows="5" required >Mensagem</label>
                 </div>
               </div>
-              <a href="mailto:pfh92006@gmail.com?subject=Olá&body=This%20is%20a%20test">Send Email</a>
-              <!--Trocar para email da ONG-->
+               <button type="submit">Enviar Email</button>
+               <p id="feedback"></p>
+
             </form>
           </div>
         </div>
       </section>
     </div>
   </div>
-
 
   <script src="{{ url_for('static', filename='js/homepage.js') }}"></script>
 </body>
