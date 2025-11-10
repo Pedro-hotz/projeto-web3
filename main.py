@@ -27,6 +27,15 @@ class Tarefa(db.Model):
     def __repr__(self):
         return f'<Tarefa {self.titulo}>'
 
+class Usuario(db.Model):
+    __tablename__ = 'usuarios'
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(100), nullable=False)
+    senha = db.Column(db.String(100), nullable=False)
+
+    def __repr__(self):
+        return f'<Usuario {self.email}>'
+
 # 2.4 Criar as Tabelas
 # É crucial rodar db.create_all() para que o SQLAlchemy crie as tabelas
 # no banco de dados com base nos seus modelos (como a classe Tarefa).

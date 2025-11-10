@@ -1,6 +1,7 @@
 import os
-from main import app, db, Tarefa, mail
+from main import app, db, Tarefa, Usuario, mail
 from flask import jsonify, redirect, render_template, request, url_for
+
 from flask_mail import Message
 
 ## Aqui nos chamamos todas as rotas
@@ -11,18 +12,15 @@ def home():
     return render_template("homepage.html") # Quando a url bater na rota, o Flask vai renderizar/chamar o template homepage.html
 
 
+@app.route("/backoffice")
+def backoffice():
+    return render_template("backoffice.html") # Quando a url bater na rota, o Flask vai renderizar/chamar o template backoffice.html
+
 # Dessa forma é passado parametros pelo URL 
 # Caso digitar http://127.0.0.1:5000/perfil/pedro vc vai entrar em uma pagina html que mostra o nome passado
 # @app.route("/perfil/<nomeUsuario>/<idade>") 
 # def perfil(nomeUsuario, idade):
 #     return render_template("usuarios.html", nomeUsuario=nomeUsuario, idade=idade)
-
-@app.route("/sobre") #, methods=["GET", "POST"]
-def sobre():
-    # if request.method == "POST":
-    #     # Aqui você pode processar os dados do formulário
-    #     pass
-    return render_template("sobre.html")
 
 
 # Exemplo de Rota (para testar)
@@ -49,6 +47,76 @@ def teste_conexao():
         return f'❌ **FALHA NA CONEXÃO OU OPERAÇÃO:** Verifique seu container Docker e suas credenciais. Erro: {e}'
     
 
+@app.route('/login', methods=['POST'])
+def login():
+   if request.method == 'POST':
+       email = request.form['email']
+       senha = request.form['senha']
+
+       usuario = Usuario.query.filter_by(email=email, senha=senha).first()
+
+       try:
+           if usuario:  
+               return redirect(url_for("backoffice"))
+           else:
+               return jsonify({'status': 'erro', 'mensagem': 'Usuário ou senha inválidos.'})
+
+       except Exception as e:
+           return jsonify({'status': 'erro', 'mensagem': f'Falha ao realizar login: {e}'})
+       
+
+@app.route('/concluido', methods=['POST'])
+def concluido():
+   if request.method == 'POST':
+       email = request.form['email']
+       senha = request.form['senha']
+
+       usuario = Usuario.query.filter_by(email=email, senha=senha).first()
+
+       try:
+           if usuario:  
+               return redirect(url_for("backoffice"))
+           else:
+               return jsonify({'status': 'erro', 'mensagem': 'Usuário ou senha inválidos.'})
+
+       except Exception as e:
+           return jsonify({'status': 'erro', 'mensagem': f'Falha ao realizar login: {e}'})
+       
+
+@app.route('/remover', methods=['POST'])
+def remover():
+   if request.method == 'POST':
+       email = request.form['email']
+       senha = request.form['senha']
+
+       usuario = Usuario.query.filter_by(email=email, senha=senha).first()
+
+       try:
+           if usuario:  
+               return redirect(url_for("backoffice"))
+           else:
+               return jsonify({'status': 'erro', 'mensagem': 'Usuário ou senha inválidos.'})
+
+       except Exception as e:
+           return jsonify({'status': 'erro', 'mensagem': f'Falha ao realizar login: {e}'})
+       
+@app.route('/adicionar', methods=['POST'])
+def adicionar():
+   if request.method == 'POST':
+       email = request.form['email']
+       senha = request.form['senha']
+
+       usuario = Usuario.query.filter_by(email=email, senha=senha).first()
+
+       try:
+           if usuario:  
+               return redirect(url_for("backoffice"))
+           else:
+               return jsonify({'status': 'erro', 'mensagem': 'Usuário ou senha inválidos.'})
+
+       except Exception as e:
+           return jsonify({'status': 'erro', 'mensagem': f'Falha ao realizar login: {e}'})
+
 
 
 @app.route('/enviarEmail', methods=['POST'])
@@ -57,6 +125,7 @@ def enviarEmail():
        nome = request.form['nome']
        email = request.form['email']
        telefone = request.form['tel']
+       select = request.form['select']
        mensagem = request.form['txt']
 
        meu_email_autenticado = os.getenv('MAIL_USERNAME')  # O remetente AUTENTICADO
@@ -65,7 +134,7 @@ def enviarEmail():
     # Criação da Mensagem
        msg = Message(
        # 1. Subject: Identifica o remetente real e o destino
-        subject=f'Mensagem do Usuário: {nome} <{email}>',
+        subject=f'Mensagem do Usuário: {nome}. Categoria: {select} <{email}>',
         
         # 2. Sender: Deve ser sua conta autenticada
         sender=meu_email_autenticado,
