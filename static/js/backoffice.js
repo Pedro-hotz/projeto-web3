@@ -1,15 +1,15 @@
 // Data Storage
-let users = [
-    { id: 1, name: "João Silva", email: "joao@example.com", role: "admin" },
-    { id: 2, name: "Maria Santos", email: "maria@example.com", role: "user" },
-    { id: 3, name: "Pedro Costa", email: "pedro@example.com", role: "editor" }
-];
+// let users = [
+//     { id: 1, name: "João Silva", email: "joao@example.com", role: "admin" },
+//     { id: 2, name: "Maria Santos", email: "maria@example.com", role: "user" },
+//     { id: 3, name: "Pedro Costa", email: "pedro@example.com", role: "editor" }
+// ];
 
-let tasks = [
-    { id: 1, title: "Revisar documentação", description: "Verificar e atualizar a documentação do sistema", completed: false },
-    { id: 2, title: "Implementar nova feature", description: "Adicionar sistema de notificações", completed: false },
-    { id: 3, title: "Corrigir bugs", description: "Resolver problemas reportados pelos usuários", completed: true }
-];
+// let tasks = [
+//     { id: 1, title: "Revisar documentação", description: "Verificar e atualizar a documentação do sistema", completed: false },
+//     { id: 2, title: "Implementar nova feature", description: "Adicionar sistema de notificações", completed: false },
+//     { id: 3, title: "Corrigir bugs", description: "Resolver problemas reportados pelos usuários", completed: true }
+// ];
 
 let nextUserId = 4;
 let nextTaskId = 4;

@@ -11,6 +11,24 @@
     pip install python-dotenv
 
 
+    Cria uma imagem 
+
+    docker run --name ong \
+    -e POSTGRES_USER=appuser \
+    -e POSTGRES_PASSWORD=minhasenha \
+    -e POSTGRES_DB=projeto_faculdade \
+    -p 5432:5432 \
+    -d postgres
+
+    docker stop ong                 => faz a imagem parar de rodar 
+
+    docker ps                       => vê a lista de imagens 
+
+    docker rm ong                   => remove a imagem 
+
+    
+
+
 # Comando para rodar o projeto 
     => python main.py 
 
@@ -19,10 +37,6 @@ Projeto para criar e implementar em produção um site para uma Ong.
 
 
 docker stop ong
-
-
-
-
 
 
 

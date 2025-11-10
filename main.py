@@ -18,7 +18,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 # 2.3 Definir um Modelo de Dados
-class Tarefa(db.Model):
+class Tarefa(db.Model): # tarefas não são as tasks do backoffice, mas teste de conexão com o bd 
     __tablename__ = 'tarefas'
     id = db.Column(db.Integer, primary_key=True)
     titulo = db.Column(db.String(100), nullable=False)
@@ -30,11 +30,24 @@ class Tarefa(db.Model):
 class Usuario(db.Model):
     __tablename__ = 'usuarios'
     id = db.Column(db.Integer, primary_key=True)
+    nome = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(100), nullable=False)
     senha = db.Column(db.String(100), nullable=False)
+    tipo = db.Column(db.String(100), nullable=False)
 
     def __repr__(self):
         return f'<Usuario {self.email}>'
+    
+class Task(db.Model):  # tasks do backoffice
+    __tablename__ = 'tasks'
+    id = db.Column(db.Integer, primary_key=True)
+    titulo = db.Column(db.String(100), nullable=False)
+    descricao = db.Column(db.String(200), nullable=True)
+    completa = db.Column(db.Boolean, default=False)
+
+    def __repr__(self):
+        return f'<Task {self.titulo}>'
+
 
 # 2.4 Criar as Tabelas
 # É crucial rodar db.create_all() para que o SQLAlchemy crie as tabelas

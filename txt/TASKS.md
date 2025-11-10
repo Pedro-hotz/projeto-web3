@@ -2,6 +2,10 @@
 
 [-] Fazer backoffice 
 
+[ ] Tratamento de erro no login 
+
+[ ] Adicionar showtoast 
+
 [ ] Ver sobre responsividade 
 
 [ ] Como ajudar / compartilhar 
