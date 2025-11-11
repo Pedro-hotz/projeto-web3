@@ -185,6 +185,10 @@ body {
     background: linear-gradient(135deg, hsl(var(--primary) / 0.05), hsl(var(--secondary) / 0.05));
     min-width: 295px;
     width: 500px;
+
+    button {
+        margin-top: 4vh;
+    }
 }
 
 .card-title {
@@ -422,6 +426,41 @@ body {
 
 .btn-success:hover {
     opacity: 0.9;
+}
+
+
+
+.users-list {
+  margin-top: 10px;
+}
+
+.user-item {
+  background: #f8f8f8;
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 15px;
+  gap: 8px;
+}
+
+.pagination-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #ccc;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.pagination-dot.active {
+  background-color: #007bff;
+  transform: scale(1.2);
 }
 
 

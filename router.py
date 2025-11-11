@@ -1,7 +1,6 @@
 import os
 from main import Task, app, db, Tarefa, Usuario, mail
-from flask import jsonify, redirect, render_template, request, url_for
-
+from flask import jsonify, redirect, render_template, request, url_for, flash
 from flask_mail import Message
 
 ## Aqui nos chamamos todas as rotas
@@ -101,38 +100,42 @@ def remover():
            return jsonify({'status': 'erro', 'mensagem': f'Falha ao realizar login: {e}'})
 
        
-@app.route('/adicionar', methods=['POST'])
-def adicionar():
+@app.route('/addUser', methods=['POST'])
+def addUser():
    if request.method == 'POST':
        nome = request.form['nome']
        email = request.form['email']
        senha = request.form['senha']
        tipo = request.form['tipo']
 
-       novo_usuario = Usuario(nome=nome, email=email, senha=senha, tipo=tipo)
-       db.session.add(novo_usuario)
-       db.session.commit()
-
-       return jsonify({'status': 'sucesso', 'mensagem': 'Usuário adicionado com sucesso.'})
-
-    #    usuario = Usuario.query.filter_by(email=email, senha=senha).first()
-
-    #    try:
-    #        if usuario:  
-    #            return redirect(url_for("backoffice"))
-    #        else:
-    #            return jsonify({'status': 'erro', 'mensagem': 'Usuário ou senha inválidos.'})
-
-    #    except Exception as e:
-    #        return jsonify({'status': 'erro', 'mensagem': f'Falha ao realizar login: {e}'})
+       try: 
+        novo_usuario = Usuario(nome=nome, email=email, senha=senha, tipo=tipo)
+        db.session.add(novo_usuario)
+        db.session.commit()
+        flash("pepeka do mal!", "success")
+        return redirect(url_for("backoffice"))
+       
+       except Exception as e:
+           flash(f"Erro ao enviar formulário: {e}", "error")
+           return redirect(url_for("backoffice"))
 
 
 @app.route('/users', methods=['GET'])
 def getUsers():
-   if request.method == 'GET':
-       usuarios = Usuario.query.all()
-       return jsonify([{'id': u.id, 'nome': u.nome, 'email': u.email, 'senha': u.senha,'tipo': u.tipo} for u in usuarios])
-   
+    usuarios = Usuario.query.all()
+    lista = []
+
+    for usuario in usuarios:
+        lista.append({
+            'id': usuario.id,
+            'nome': usuario.nome,
+            'email': usuario.email,
+            'tipo': usuario.tipo
+        })
+
+    return jsonify(lista)
+
+
 
 @app.route('/tasks', methods=['GET'])
 def getTasks():

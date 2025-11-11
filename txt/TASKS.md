@@ -1,5 +1,10 @@
 # ============ QUADRO DE TAREFAS ===================
 
+
+================================
+[ ] DAR UM JEITO NA SECRET_KEY
+================================
+
 [-] Fazer backoffice 
 
 [ ] Tratamento de erro no login 
@@ -14,8 +19,6 @@
 
 [ ] CRUD 
 
-[ ] 
-
 [ ] Ajustar o projeto para dar um comando e instalar todas as libs 
 
 [+] Serviço de email 
@@ -27,3 +30,4 @@
 
 # =======================================================
 
+- No email do destinatário, precisa-se criar uma autentificação de dois fatores e pegar o código de segunrança 

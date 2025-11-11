@@ -1,18 +1,5 @@
-// Data Storage
-let users = [
-    { id: 1, name: "João Silva", email: "joao@example.com", role: "admin" },
-    { id: 2, name: "Maria Santos", email: "maria@example.com", role: "user" },
-    { id: 3, name: "Pedro Costa", email: "pedro@example.com", role: "editor" }
-];
-
-let tasks = [
-    { id: 1, title: "Revisar documentação", description: "Verificar e atualizar a documentação do sistema", completed: false },
-    { id: 2, title: "Implementar nova feature", description: "Adicionar sistema de notificações", completed: false },
-    { id: 3, title: "Corrigir bugs", description: "Resolver problemas reportados pelos usuários", completed: true }
-];
-
-let nextUserId = 4;
-let nextTaskId = 4;
+let users = [];
+let tasks = [];
 
 // DOM Elements
 const sidebar = document.getElementById('sidebar');
@@ -56,20 +43,42 @@ overlay.addEventListener('click', () => {
 navButtons.forEach(button => {
     button.addEventListener('click', () => {
         const section = button.dataset.section;
-        
+
         // Update active button
         navButtons.forEach(btn => btn.classList.remove('active'));
         button.classList.add('active');
-        
+
         // Update active section
         sections.forEach(sec => sec.classList.remove('active'));
         document.getElementById(`${section}Section`).classList.add('active');
-        
+
         // Close mobile menu
         sidebar.classList.remove('open');
         overlay.classList.remove('active');
     });
 });
+
+
+async function fetchUsers() {
+  try {
+    const response = await fetch("/users");
+    const data = await response.json();
+
+    // Ajusta nomes das chaves se necessário (nome -> name)
+    users = data.map(u => ({
+      id: u.id,
+      name: u.nome,
+      email: u.email,
+      role: u.tipo || "user" // valor padrão se tipo for null
+    }));
+
+    renderUsers(); // Atualiza a tela com os dados do banco
+  } catch (error) {
+    console.error("Erro ao buscar usuários:", error);
+    showNotification("Erro ao carregar usuários!");
+  }
+}
+
 
 // User Management Functions
 function renderUsers() {
@@ -139,11 +148,11 @@ confirmModal.addEventListener('click', (e) => {
 // User Form Handler
 userForm.addEventListener('submit', (e) => {
     e.preventDefault();
-    
+
     const name = userNameInput.value.trim();
     const email = userEmailInput.value.trim();
     const role = userRoleSelect.value;
-    
+
     if (name && email) {
         addUser(name, email, role);
         userForm.reset();
@@ -226,10 +235,10 @@ function completeTask(id) {
 // Task Form Handler
 taskForm.addEventListener('submit', (e) => {
     e.preventDefault();
-    
+
     const title = taskTitleInput.value.trim();
     const description = taskDescriptionInput.value.trim();
-    
+
     if (title) {
         addTask(title, description);
         taskForm.reset();
@@ -253,9 +262,9 @@ function showNotification(message) {
         animation: slideIn 0.3s ease;
     `;
     notification.textContent = message;
-    
+
     document.body.appendChild(notification);
-    
+
     setTimeout(() => {
         notification.style.animation = 'slideOut 0.3s ease';
         setTimeout(() => notification.remove(), 300);
@@ -289,9 +298,9 @@ style.textContent = `
 `;
 document.head.appendChild(style);
 
-// Initial Render
-renderUsers();
-renderTasks();
+// Inicializa o painel
+fetchUsers();  // Busca do Flask
+renderTasks(); // Mantém as tarefas locais
 
 // Make functions available globally
 window.removeUser = removeUser;
@@ -299,18 +308,52 @@ window.confirmRemoveTask = confirmRemoveTask;
 window.completeTask = completeTask;
 
 
-/* TOAST  */
 
-function showToast(message) {
-  const toast = document.getElementById("toast");
-  toast.textContent = message; // Define a mensagem
-  toast.className = "toast show"; // Adiciona a classe para exibir o toast
 
-  // Remove o toast após 3 segundos
-  setTimeout(() => {
-    toast.className = "toast";
-  }, 3000);
+
+
+const USERS_PER_PAGE = 3;
+let currentPage = 1;
+
+function renderUsers() {
+  const usersList = document.getElementById("usersList");
+  const pagination = document.getElementById("pagination");
+
+  if (!users || users.length === 0) {
+    usersList.innerHTML = '<div class="empty-state">Nenhum usuário cadastrado</div>';
+    pagination.innerHTML = '';
+    return;
+  }
+
+  const startIndex = (currentPage - 1) * USERS_PER_PAGE;
+  const endIndex = startIndex + USERS_PER_PAGE;
+  const paginatedUsers = users.slice(startIndex, endIndex);
+
+  usersList.innerHTML = paginatedUsers.map(user => `
+    <div class="user-item">
+        <div class="user-info">
+            <div class="user-name">${user.name}</div>
+            <div class="user-email">${user.email}</div>
+            <span class="user-role">${getRoleName(user.role)}</span>
+        </div>
+        <button class="btn btn-destructive" onclick="removeUser(${user.id})">Remover</button>
+    </div>
+  `).join('');
+
+  // cria bolinhas de paginação
+  const totalPages = Math.ceil(users.length / USERS_PER_PAGE);
+  pagination.innerHTML = '';
+
+  for (let i = 1; i <= totalPages; i++) {
+    const dot = document.createElement('div');
+    dot.classList.add('pagination-dot');
+    if (i === currentPage) dot.classList.add('active');
+
+    dot.addEventListener('click', () => {
+      currentPage = i;
+      renderUsers();
+    });
+
+    pagination.appendChild(dot);
+  }
 }
-
-// Exemplo de uso
-showToast("Olá! Este é um toast de exemplo.");
