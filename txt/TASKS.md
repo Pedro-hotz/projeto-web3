@@ -8,6 +8,8 @@
 
 [ ] Ver sobre responsividade 
 
+[ ] Relatório de tasks feitas
+
 [ ] Como ajudar / compartilhar 
 
 [ ] CRUD 
