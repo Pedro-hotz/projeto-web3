@@ -1,18 +1,20 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/backoffice.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/backoffice.css') }}">
     <title>Backoffice</title>
 </head>
+
 <body>
 
-      <!-- Sidebar -->
+    <!-- Sidebar -->
     <aside id="sidebar" class="sidebar">
         <div class="sidebar-content">
             <h2 class="sidebar-title">Backoffice</h2>
-            
+
             <nav class="sidebar-nav">
                 <button class="nav-button active" data-section="users">
                     <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -23,7 +25,7 @@
                     </svg>
                     <span>Gestão de Usuários</span>
                 </button>
-                
+
                 <button class="nav-button" data-section="tasks">
                     <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <line x1="8" y1="6" x2="21" y2="6"></line>
@@ -35,6 +37,11 @@
                     </svg>
                     <span>Lista de Tarefas</span>
                 </button>
+                <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+                <div class="version">
+                    <span>1.0 v</span>
+                </div>
+                
             </nav>
         </div>
     </aside>
@@ -63,6 +70,7 @@
         </div>
     </div>
 
+
     <!-- Main Content -->
     <main class="main-content">
         <!-- User Management Section -->
@@ -70,38 +78,42 @@
             <div class="section-header">
                 <h1 class="section-title">Gestão de Usuários</h1>
                 <p class="section-description">Adicione e gerencie usuários do sistema</p>
+
             </div>
 
-            <div class="card add-card">
-                <h2 class="card-title">Adicionar Novo Usuário</h2>
-                <form id="userForm" class="form">
-                    <div class="form-group">
-                        <label class="form-label">Nome</label>
-                        <input type="text" id="userName" class="form-input" placeholder="Digite o nome" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Email</label>
-                        <input type="email" id="userEmail" class="form-input" placeholder="Digite o email" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Senha</label>
-                        <input type="password" id="userPassword" class="form-input" placeholder="Digite a senha" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Papel</label>
-                        <select id="userRole" class="form-select">
-                            <option value="user">Usuário</option>
-                            <option value="admin">Admin</option>
-                            <option value="editor">Editor</option>
-                        </select>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Adicionar Usuário</button>
-                </form>
-            </div>
+            <div class="card-lado">
+                <div class="card add-card">
+                    <h2 class="card-title">Adicionar Novo Usuário</h2>
+                    <form id="userForm" class="form">
+                        <div class="form-group">
+                            <label class="form-label">Nome</label>
+                            <input type="text" id="userName" class="form-input" placeholder="Digite o nome" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Email</label>
+                            <input type="email" id="userEmail" class="form-input" placeholder="Digite o email" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Senha</label>
+                            <input type="password" id="userPassword" class="form-input" placeholder="Digite a senha"
+                                required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Papel</label>
+                            <select id="userRole" class="form-select">
+                                <option value="user">Usuário</option>
+                                <option value="admin">Admin</option>
+                                <option value="editor">Editor</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Adicionar Usuário</button>
+                    </form>
+                </div>
 
-            <div class="card">
-                <h2 class="card-title">Usuários Cadastrados</h2>
-                <div id="usersList" class="users-list"></div>
+                <div class="card">
+                    <h2 class="card-title">Usuários Cadastrados</h2>
+                    <div id="usersList" class="users-list"></div>
+                </div>
             </div>
         </section>
 
@@ -122,7 +134,8 @@
                     </div>
                     <div class="form-group">
                         <label class="form-label">Descrição</label>
-                        <textarea id="taskDescription" class="form-textarea" placeholder="Digite a descrição" rows="3"></textarea>
+                        <textarea id="taskDescription" class="form-textarea" placeholder="Digite a descrição"
+                            rows="3"></textarea>
                     </div>
                     <button type="submit" class="btn btn-primary">Adicionar Tarefa</button>
                 </form>
@@ -145,4 +158,5 @@
     <div id="toast" class="toast">Mensagem de exemplo</div>
     <script src="../static/js/backoffice.js"></script>
 </body>
+
 </html>

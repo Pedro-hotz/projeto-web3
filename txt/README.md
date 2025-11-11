@@ -1,15 +1,26 @@
-# Baixar o flask 
-    => pip install flask 
+# Baixar dependências 
 
-    Baixar lib do banco 
-    => pip install Flask-SQLAlchemy psycopg2-binary
+    pip install -r requirements.txt
 
-    Baixar lib de email 
-    pip install Flask-Mail
 
-    Baixar .env
-    pip install python-dotenv
 
+# ============================================================
+
+Para instalar as dependências:
+
+    make install
+
+
+Para rodar a aplicação Flask:
+
+    make run
+
+
+Para rodar a aplicação Flask dentro de um container Docker:
+
+    make docker-run
+
+# ============================================================
 
     Cria uma imagem 
 
@@ -26,7 +37,6 @@
 
     docker rm ong                   => remove a imagem 
 
-    
 
 
 # Comando para rodar o projeto 

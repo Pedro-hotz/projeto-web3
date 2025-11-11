@@ -17,4 +17,3 @@ plt.plot(x, y, color="Slateblue", alpha=0.8)
 plt.title("Gráfico de Área")
 plt.show()
 
-

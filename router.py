@@ -99,6 +99,7 @@ def remover():
 
        except Exception as e:
            return jsonify({'status': 'erro', 'mensagem': f'Falha ao realizar login: {e}'})
+
        
 @app.route('/adicionar', methods=['POST'])
 def adicionar():
@@ -130,7 +131,7 @@ def adicionar():
 def getUsers():
    if request.method == 'GET':
        usuarios = Usuario.query.all()
-       return jsonify([{'id': u.id, 'nome': u.nome, 'email': u.email, 'tipo': u.tipo} for u in usuarios])
+       return jsonify([{'id': u.id, 'nome': u.nome, 'email': u.email, 'senha': u.senha,'tipo': u.tipo} for u in usuarios])
    
 
 @app.route('/tasks', methods=['GET'])

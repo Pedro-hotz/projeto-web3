@@ -10,6 +10,10 @@
 
 [ ] Como ajudar / compartilhar 
 
+[ ] CRUD 
+
+[ ] 
+
 [ ] Ajustar o projeto para dar um comando e instalar todas as libs 
 
 [+] Serviço de email 
