@@ -157,30 +157,6 @@ function renderUsers() {
     </div>
     `).join('');
 
-
-    renderPagination();
-}
-
-/**
- * Renderiza os controles de paginação.
- */
-function renderPagination() {
-    const totalPages = Math.ceil(users.length / USERS_PER_PAGE);
-    paginationContainer.innerHTML = '';
-
-    for (let i = 1; i <= totalPages; i++) {
-        const dot = document.createElement('button');
-        dot.classList.add('page-btn'); // Mudado para botão para melhor acessibilidade
-        dot.textContent = i;
-        if (i === currentPage) dot.classList.add('active');
-
-        dot.addEventListener('click', () => {
-            currentPage = i;
-            renderUsers();
-        });
-
-        paginationContainer.appendChild(dot);
-    }
 }
 
 /**
@@ -202,18 +178,18 @@ async function removeUser(id) {
 
         if (response.ok && data.status === 'sucesso') {
             // Sucesso na remoção
-            showToast('success', data.mensagem); // 'Usuário removido com sucesso.'
+            showToast('success', data.mensagem);
+            setTimeout(() => {
+                location.reload();
+            }, 3100);
 
-            // Recarrega a lista de usuários para atualizar a interface
-            await fetchAndRenderUsers();
+            
         } else {
-            // Falha na remoção (ex: Usuário não encontrado, ou erro de servidor)
             throw new Error(data.mensagem || 'Falha desconhecida ao remover usuário.');
         }
 
     } catch (error) {
         console.error('Erro na remoção:', error);
-        // Exibe o erro retornado pelo Flask ou erro de rede
         showToast('error', error.message || 'Erro de conexão com a API.');
     }
 }
@@ -271,7 +247,6 @@ async function fetchAndRenderUsers(searchTerm = '') {
 
         // 2. Renderiza a lista e a paginação
         renderUsers();
-        renderPagination();
 
     } catch (error) {
         console.error('Erro ao buscar usuários:', error);
@@ -493,6 +468,7 @@ function renderUsers() {
         <button class="btn btn-destructive" onclick="removeUser(${user.id})">Remover</button>
     </div>
   `).join('');
+
 
     // cria bolinhas de paginação
     const totalPages = Math.ceil(users.length / USERS_PER_PAGE);
