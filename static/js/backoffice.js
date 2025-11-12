@@ -193,8 +193,8 @@ function renderPagination() {
 async function removeUser(id) {
     try {
         // Altera a rota de chamada para a sua rota Flask /deleteUser/<id>
-        const response = await fetch(`/deleteUser/${id}`, { 
-            method: 'DELETE' 
+        const response = await fetch(`/deleteUser/${id}`, {
+            method: 'DELETE'
         });
 
         // Tenta ler a resposta JSON (status ou erro)
@@ -203,9 +203,9 @@ async function removeUser(id) {
         if (response.ok && data.status === 'sucesso') {
             // Sucesso na remoção
             showToast('success', data.mensagem); // 'Usuário removido com sucesso.'
-            
+
             // Recarrega a lista de usuários para atualizar a interface
-            await fetchAndRenderUsers(); 
+            await fetchAndRenderUsers();
         } else {
             // Falha na remoção (ex: Usuário não encontrado, ou erro de servidor)
             throw new Error(data.mensagem || 'Falha desconhecida ao remover usuário.');
@@ -256,19 +256,19 @@ async function fetchAndRenderUsers(searchTerm = '') {
     }
     // NOTA: Se você usou a rota única '/searchUsers' que lida com o parâmetro opcional,
     // a URL seria sempre: `/searchUsers?nome=${encodeURIComponent(searchTerm)}`
-    
+
     try {
         const response = await fetch(url);
-        
+
         if (!response.ok) {
             throw new Error(`Erro HTTP: ${response.status}`);
         }
-        
+
         const usersData = await response.json();
-        
+
         // 1. Armazena a lista de usuários buscados
-        users = usersData; 
-        
+        users = usersData;
+
         // 2. Renderiza a lista e a paginação
         renderUsers();
         renderPagination();
