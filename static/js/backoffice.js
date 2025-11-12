@@ -1,5 +1,14 @@
+// backoffice.js
+
+// Variáveis Globais (Corrigidas para refletir o uso da API e Paginação)
 let users = [];
 let tasks = [];
+const USERS_PER_PAGE = 3; // Constante para controle da paginação
+let currentPage = 1;
+
+// Próximo ID para tarefas locais
+let nextTaskId = 1;
+
 
 // DOM Elements
 const sidebar = document.getElementById('sidebar');
@@ -10,10 +19,9 @@ const sections = document.querySelectorAll('.content-section');
 
 // User Form Elements
 const userForm = document.getElementById('userForm');
-const userNameInput = document.getElementById('userName');
-const userEmailInput = document.getElementById('userEmail');
-const userRoleSelect = document.getElementById('userRole');
-const usersList = document.getElementById('usersList');
+const usersListContainer = document.getElementById('usersList');
+const paginationContainer = document.getElementById('pagination');
+const usersListTitle = document.getElementById('usersListTitle');
 
 // Task Form Elements
 const taskForm = document.getElementById('taskForm');
@@ -41,6 +49,7 @@ overlay.addEventListener('click', () => {
 
 // Navigation
 navButtons.forEach(button => {
+
     button.addEventListener('click', () => {
         const section = button.dataset.section;
 
@@ -55,121 +64,294 @@ navButtons.forEach(button => {
         // Close mobile menu
         sidebar.classList.remove('open');
         overlay.classList.remove('active');
+
     });
+
 });
 
 
-async function fetchUsers() {
-  try {
-    const response = await fetch("/users");
-    const data = await response.json();
 
-    // Ajusta nomes das chaves se necessário (nome -> name)
-    users = data.map(u => ({
-      id: u.id,
-      name: u.nome,
-      email: u.email,
-      role: u.tipo || "user" // valor padrão se tipo for null
-    }));
-
-    renderUsers(); // Atualiza a tela com os dados do banco
-  } catch (error) {
-    console.error("Erro ao buscar usuários:", error);
-    showNotification("Erro ao carregar usuários!");
-  }
+// Função auxiliar para exibir Toast (substitui showNotification)
+function showToast(icon, title) {
+    Swal.fire({
+        icon: icon,
+        title: title,
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+    });
 }
 
 
-// User Management Functions
+// --- 1. Lógica de Usuários (API e Paginação) ---
+
+/**
+ * Busca usuários na API do Flask e atualiza a lista global.
+ */
+async function fetchUsers() {
+    try {
+        const response = await fetch("/users");
+        if (!response.ok) {
+            throw new Error(`Erro HTTP: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        users = data.map(u => ({
+            id: u.id,
+            nome: u.nome,
+            email: u.email,
+            tipo: u.tipo || 'user'
+        }));
+
+        usersListTitle.innerHTML = `<h2 class="card-title">Usuários Cadastrados (${users.length})</h2>`;
+
+
+        renderUsers();
+
+    } catch (error) {
+        usersListContainer.innerHTML = '<div class="empty-state">Erro ao carregar usuários.</div>';
+        console.error("Erro ao buscar usuários:", error);
+        showToast('error', 'Erro ao carregar lista de usuários!');
+    }
+}
+
+/**
+ * Mapeia o tipo de usuário para um nome amigável.
+ */
+function getRoleName(tipo) {
+    const roleNames = {
+        'admin': 'Administrador',
+        'editor': 'Editor',
+        'user': 'Usuário Padrão'
+    };
+    return roleNames[tipo] || tipo;
+}
+
+/**
+ * Renderiza a lista de usuários paginada.
+ */
 function renderUsers() {
-    if (users.length === 0) {
-        usersList.innerHTML = '<div class="empty-state">Nenhum usuário cadastrado</div>';
+    if (!users || users.length === 0) {
+        usersListContainer.innerHTML = '<div class="empty-state">Nenhum usuário cadastrado</div>';
+        paginationContainer.innerHTML = '';
         return;
     }
 
-    usersList.innerHTML = users.map(user => `
-        <div class="user-item">
-            <div class="user-info">
-                <div class="user-name">${user.name}</div>
-                <div class="user-email">${user.email}</div>
-                <span class="user-role">${getRoleName(user.role)}</span>
-            </div>
-            <button class="btn btn-destructive" onclick="removeUser(${user.id})">Remover</button>
+
+
+    const startIndex = (currentPage - 1) * USERS_PER_PAGE;
+    const endIndex = startIndex + USERS_PER_PAGE;
+    const paginatedUsers = users.slice(startIndex, endIndex);
+
+    usersListContainer.innerHTML = paginatedUsers.map(user => `
+    <div class="user-item">
+        <div class="user-info">
+            <div class="user-name">${user.nome}</div>
+            <div class="user-email">${user.email}</div>
+            <span class="user-role role-${user.tipo}">${getRoleName(user.tipo)}</span>
         </div>
+        <button class="btn btn-destructive" onclick="confirmRemoveUser(${user.id}, '${user.nome}')">Remover</button>
+    </div>
     `).join('');
+
+
+    renderPagination();
 }
 
-function getRoleName(role) {
-    const roleNames = {
-        'admin': 'Administrador',
-        'user': 'Usuário',
-        'editor': 'Editor'
+/**
+ * Renderiza os controles de paginação.
+ */
+function renderPagination() {
+    const totalPages = Math.ceil(users.length / USERS_PER_PAGE);
+    paginationContainer.innerHTML = '';
+
+    for (let i = 1; i <= totalPages; i++) {
+        const dot = document.createElement('button');
+        dot.classList.add('page-btn'); // Mudado para botão para melhor acessibilidade
+        dot.textContent = i;
+        if (i === currentPage) dot.classList.add('active');
+
+        dot.addEventListener('click', () => {
+            currentPage = i;
+            renderUsers();
+        });
+
+        paginationContainer.appendChild(dot);
+    }
+}
+
+/**
+ * Mostra o modal de confirmação para remoção de usuário.
+ */
+/**
+ * Envia a requisição DELETE para a API do Flask para remover um usuário.
+ * @param {number} id - O ID do usuário a ser removido.
+ */
+async function removeUser(id) {
+    try {
+        // Altera a rota de chamada para a sua rota Flask /deleteUser/<id>
+        const response = await fetch(`/deleteUser/${id}`, { 
+            method: 'DELETE' 
+        });
+
+        // Tenta ler a resposta JSON (status ou erro)
+        const data = await response.json();
+
+        if (response.ok && data.status === 'sucesso') {
+            // Sucesso na remoção
+            showToast('success', data.mensagem); // 'Usuário removido com sucesso.'
+            
+            // Recarrega a lista de usuários para atualizar a interface
+            await fetchAndRenderUsers(); 
+        } else {
+            // Falha na remoção (ex: Usuário não encontrado, ou erro de servidor)
+            throw new Error(data.mensagem || 'Falha desconhecida ao remover usuário.');
+        }
+
+    } catch (error) {
+        console.error('Erro na remoção:', error);
+        // Exibe o erro retornado pelo Flask ou erro de rede
+        showToast('error', error.message || 'Erro de conexão com a API.');
+    }
+}
+
+
+/**
+ * Mostra o modal de confirmação para remoção de usuário (usando SweetAlert2).
+ * Esta função deve chamar removeUser(id) se confirmada.
+ */
+function confirmRemoveUser(id, nome) {
+    Swal.fire({
+        title: "Tem certeza?",
+        text: `Você realmente deseja remover o usuário ${nome}?`,
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#dc3545",
+        cancelButtonColor: "#6c757d",
+        confirmButtonText: "Sim, remover!",
+        cancelButtonText: "Cancelar"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Se confirmado, chama a função de remoção que se comunica com o Flask
+            removeUser(id);
+        }
+    });
+}
+
+
+/**
+ * Busca usuários na API do Flask, armazena globalmente e inicia a renderização.
+ * @param {string} searchTerm - O termo de busca opcional (nome).
+ */
+async function fetchAndRenderUsers(searchTerm = '') {
+    currentPage = 1; // Sempre volta para a primeira página em uma nova busca
+
+    let url = '/users';
+    if (searchTerm) {
+        // Usa a rota /searchUsers se você a implementou separadamente
+        url = `/searchUsers?nome=${encodeURIComponent(searchTerm)}`;
+    }
+    // NOTA: Se você usou a rota única '/searchUsers' que lida com o parâmetro opcional,
+    // a URL seria sempre: `/searchUsers?nome=${encodeURIComponent(searchTerm)}`
+    
+    try {
+        const response = await fetch(url);
+        
+        if (!response.ok) {
+            throw new Error(`Erro HTTP: ${response.status}`);
+        }
+        
+        const usersData = await response.json();
+        
+        // 1. Armazena a lista de usuários buscados
+        users = usersData; 
+        
+        // 2. Renderiza a lista e a paginação
+        renderUsers();
+        renderPagination();
+
+    } catch (error) {
+        console.error('Erro ao buscar usuários:', error);
+        usersListContainer.innerHTML = '<p class="error-message">Não foi possível carregar os usuários.</p>';
+        showToast('error', 'Erro ao carregar lista de usuários!');
+    }
+}
+
+
+// --- 2. Lógica de Tarefas (Local) ---
+
+/**
+ * Adiciona uma nova tarefa à lista local.
+ */
+function addTask(title, description) {
+    const newTask = {
+        id: nextTaskId++,
+        title: title,
+        description: description,
+        completed: false
     };
-    return roleNames[role] || role;
+    tasks.push(newTask);
+    renderTasks();
+    showToast('success', 'Tarefa adicionada!');
 }
 
-function addUser(name, email, role) {
-    const newUser = {
-        id: nextUserId++,
-        name,
-        email,
-        role
-    };
-    users.push(newUser);
-    renderUsers();
+/**
+ * Marca uma tarefa como concluída.
+ */
+function completeTask(id) {
+    const task = tasks.find(t => t.id === id);
+    if (task) {
+        task.completed = true;
+        renderTasks();
+        showToast('success', 'Tarefa concluída!');
+    }
 }
 
-function removeUser(id) {
-    users = users.filter(user => user.id !== id);
-    renderUsers();
+/**
+ * Remove uma tarefa da lista local.
+ */
+function removeTask(id) {
+    tasks = tasks.filter(task => task.id !== id);
+    renderTasks();
+    showToast('info', 'Tarefa removida.');
 }
 
-// Modal Handlers
-cancelBtn.addEventListener('click', () => {
-    confirmModal.classList.remove('active');
-    pendingAction = null;
-});
+/**
+ * Mostra o modal de confirmação para remoção de tarefa (Local).
+ */
+function confirmRemoveTask(id) {
+    Swal.fire({
+        title: "Tem certeza?",
+        text: "Você removerá esta tarefa permanentemente.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#dc3545",
+        cancelButtonColor: "#6c757d",
+        confirmButtonText: "Sim, remover!",
+        cancelButtonText: "Cancelar"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            removeTask(id);
+        }
+    });
+}
 
-confirmBtn.addEventListener('click', () => {
-    if (pendingAction) {
-        pendingAction();
-        pendingAction = null;
-    }
-    confirmModal.classList.remove('active');
-});
-
-confirmModal.addEventListener('click', (e) => {
-    if (e.target === confirmModal) {
-        confirmModal.classList.remove('active');
-        pendingAction = null;
-    }
-});
-
-// User Form Handler
-userForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-
-    const name = userNameInput.value.trim();
-    const email = userEmailInput.value.trim();
-    const role = userRoleSelect.value;
-
-    if (name && email) {
-        addUser(name, email, role);
-        userForm.reset();
-        showNotification('Usuário adicionado com sucesso!');
-    }
-});
-
-// Task Management Functions
+/**
+ * Renderiza as listas de tarefas (pendentes e concluídas).
+ */
 function renderTasks() {
     const pendingTasks = tasks.filter(task => !task.completed);
     const completedTasks = tasks.filter(task => task.completed);
 
+    // Renderiza pendentes
     if (pendingTasks.length === 0) {
         tasksList.innerHTML = '<div class="empty-state">Nenhuma tarefa pendente</div>';
     } else {
         tasksList.innerHTML = pendingTasks.map(task => `
-            <div class="task-item">
+             <div class="task-item">
                 <div class="task-header">
                     <div class="task-info" style="flex: 1;">
                         <div class="task-title">${task.title}</div>
@@ -184,11 +366,12 @@ function renderTasks() {
         `).join('');
     }
 
+    // Renderiza concluídas
     if (completedTasks.length === 0) {
         completedTasksList.innerHTML = '<div class="empty-state">Nenhuma tarefa concluída</div>';
     } else {
         completedTasksList.innerHTML = completedTasks.map(task => `
-            <div class="task-item completed">
+             <div class="task-item completed">
                 <div class="task-header">
                     <div class="task-info" style="flex: 1;">
                         <div class="task-title">${task.title}</div>
@@ -203,36 +386,8 @@ function renderTasks() {
     }
 }
 
-function addTask(title, description) {
-    const newTask = {
-        id: nextTaskId++,
-        title,
-        description,
-        completed: false
-    };
-    tasks.push(newTask);
-    renderTasks();
-}
 
-function confirmRemoveTask(id) {
-    pendingAction = () => {
-        tasks = tasks.filter(task => task.id !== id);
-        renderTasks();
-        showNotification('Tarefa removida com sucesso!');
-    };
-    confirmModal.classList.add('active');
-}
-
-function completeTask(id) {
-    const task = tasks.find(t => t.id === id);
-    if (task) {
-        task.completed = true;
-        renderTasks();
-        showNotification('Tarefa concluída!');
-    }
-}
-
-// Task Form Handler
+// Task Form Handler (Para tarefas locais)
 taskForm.addEventListener('submit', (e) => {
     e.preventDefault();
 
@@ -242,7 +397,8 @@ taskForm.addEventListener('submit', (e) => {
     if (title) {
         addTask(title, description);
         taskForm.reset();
-        showNotification('Tarefa adicionada com sucesso!');
+    } else {
+        showToast('warning', 'O título da tarefa é obrigatório.');
     }
 });
 
@@ -294,16 +450,18 @@ style.textContent = `
             transform: translateX(400px);
             opacity: 0;
         }
-    }
-`;
-document.head.appendChild(style);
+    });
+});`
+
 
 // Inicializa o painel
-fetchUsers();  // Busca do Flask
-renderTasks(); // Mantém as tarefas locais
+document.addEventListener('DOMContentLoaded', () => {
+    fetchUsers();
+    renderTasks();
+});
 
-// Make functions available globally
-window.removeUser = removeUser;
+// Torna funções globais para serem usadas no onclick no HTML gerado
+window.confirmRemoveUser = confirmRemoveUser;
 window.confirmRemoveTask = confirmRemoveTask;
 window.completeTask = completeTask;
 
@@ -311,49 +469,49 @@ window.completeTask = completeTask;
 
 
 
-
-const USERS_PER_PAGE = 3;
-let currentPage = 1;
-
 function renderUsers() {
-  const usersList = document.getElementById("usersList");
-  const pagination = document.getElementById("pagination");
+    const usersList = document.getElementById("usersList");
+    const pagination = document.getElementById("pagination");
 
-  if (!users || users.length === 0) {
-    usersList.innerHTML = '<div class="empty-state">Nenhum usuário cadastrado</div>';
-    pagination.innerHTML = '';
-    return;
-  }
+    if (!users || users.length === 0) {
+        usersList.innerHTML = '<div class="empty-state">Nenhum usuário cadastrado</div>';
+        pagination.innerHTML = '';
+        return;
+    }
 
-  const startIndex = (currentPage - 1) * USERS_PER_PAGE;
-  const endIndex = startIndex + USERS_PER_PAGE;
-  const paginatedUsers = users.slice(startIndex, endIndex);
+    const startIndex = (currentPage - 1) * USERS_PER_PAGE;
+    const endIndex = startIndex + USERS_PER_PAGE;
+    const paginatedUsers = users.slice(startIndex, endIndex);
 
-  usersList.innerHTML = paginatedUsers.map(user => `
+    usersList.innerHTML = paginatedUsers.map(user => `
     <div class="user-item">
         <div class="user-info">
-            <div class="user-name">${user.name}</div>
+            <div class="user-name">${user.nome}</div>
             <div class="user-email">${user.email}</div>
-            <span class="user-role">${getRoleName(user.role)}</span>
+            <span class="user-role">${getRoleName(user.tipo)}</span>
         </div>
         <button class="btn btn-destructive" onclick="removeUser(${user.id})">Remover</button>
     </div>
   `).join('');
 
-  // cria bolinhas de paginação
-  const totalPages = Math.ceil(users.length / USERS_PER_PAGE);
-  pagination.innerHTML = '';
+    // cria bolinhas de paginação
+    const totalPages = Math.ceil(users.length / USERS_PER_PAGE);
+    pagination.innerHTML = '';
 
-  for (let i = 1; i <= totalPages; i++) {
-    const dot = document.createElement('div');
-    dot.classList.add('pagination-dot');
-    if (i === currentPage) dot.classList.add('active');
+    for (let i = 1; i <= totalPages; i++) {
+        const dot = document.createElement('div');
+        dot.classList.add('pagination-dot');
+        if (i === currentPage) dot.classList.add('active');
 
-    dot.addEventListener('click', () => {
-      currentPage = i;
-      renderUsers();
-    });
+        dot.addEventListener('click', () => {
+            currentPage = i;
+            renderUsers();
+        });
 
-    pagination.appendChild(dot);
-  }
+        pagination.appendChild(dot);
+    }
 }
+
+
+
+

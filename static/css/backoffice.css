@@ -8,7 +8,9 @@
     --primary: 220 90% 56%;
     --primary-foreground: 0 0% 100%;
     --secondary: 280 80% 60%;
-    --background: 0 0% 100%;
+    --accent: 160 70% 50%;
+    --success: 142 76% 36%;
+    --background: 220 20% 97%;
     --foreground: 222.2 84% 4.9%;
     --card: 0 0% 100%;
     --card-foreground: 222.2 84% 4.9%;
@@ -33,10 +35,11 @@ body {
     left: 0;
     height: 100vh;
     width: 16rem;
-    background-color: hsl(var(--card));
+    background: linear-gradient(180deg, hsl(var(--primary)) 0%, hsl(var(--secondary)) 100%);
     border-right: 1px solid hsl(var(--border));
     transition: transform 0.3s ease;
     z-index: 40;
+    box-shadow: 4px 0 12px rgba(0, 0, 0, 0.1);
 }
 
 .sidebar.closed {
@@ -47,12 +50,12 @@ body {
     padding: 1.5rem;
 }
 
-
 .sidebar-title {
     font-size: 1.5rem;
     font-weight: bold;
-    color: hsl(var(--foreground));
+    color: white;
     margin-bottom: 2rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .sidebar-nav {
@@ -65,7 +68,7 @@ body {
 
 .version {
     text-align: center;
-    color: #6b6b6b;
+    color: #ffffff;
     font-family: monospace;
 }
 
@@ -78,28 +81,28 @@ body {
     border: none;
     border-radius: var(--radius);
     background-color: transparent;
-    color: hsl(var(--muted-foreground));
+    color: rgba(255, 255, 255, 0.8);
     font-size: 1rem;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.3s ease;
 }
 
 .nav-button:hover {
-    background-color: hsl(var(--muted));
-    color: hsl(var(--foreground));
+    background-color: rgba(255, 255, 255, 0.15);
+    color: white;
+    transform: translateX(4px);
 }
 
 .nav-button.active {
-    background-color: hsl(var(--primary));
-    color: hsl(var(--primary-foreground));
+    background-color: white;
+    color: hsl(var(--primary));
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
-
 
 .icon {
     width: 1.25rem;
     height: 1.25rem;
 }
-
 
 .mobile-menu-btn {
     position: fixed;
@@ -114,7 +117,6 @@ body {
     cursor: pointer;
 }
 
-
 .overlay {
     display: none;
     position: fixed;
@@ -124,11 +126,9 @@ body {
     z-index: 30;
 }
 
-
 .overlay.active {
     display: block;
 }
-
 
 .main-content {
     margin-left: 16rem;
@@ -137,23 +137,19 @@ body {
     transition: margin-left 0.3s ease;
 }
 
-
 .content-section {
     display: none;
     max-width: 72rem;
     margin: 0 auto;
 }
 
-
 .content-section.active {
     display: block;
 }
 
-
 .section-header {
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
 }
-
 
 .section-title {
     font-size: 2rem;
@@ -161,14 +157,9 @@ body {
     margin-bottom: 0.5rem;
 }
 
-
 .section-description {
     color: hsl(var(--muted-foreground));
 }
-
-
-
-
 
 .card {
     background-color: hsl(var(--card));
@@ -176,25 +167,31 @@ body {
     border-radius: calc(var(--radius) + 4px);
     padding: 1.5rem;
     margin-bottom: 1.5rem;
-    min-width: 295px;
-    width: 500px;
 }
 
 
-.add-card {
-    background: linear-gradient(135deg, hsl(var(--primary) / 0.05), hsl(var(--secondary) / 0.05));
-    min-width: 295px;
-    width: 500px;
 
-    button {
-        margin-top: 4vh;
-    }
+.add-card {
+    border: 2px solid hsl(var(--primary) / 0.2);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+button.btn.btn-primary {
+    /* text-align: center; */
+    align-items: center;
+    display: flex;
+    gap: 2vh;
+    justify-content: center;
 }
 
 .card-title {
     font-size: 1.25rem;
     font-weight: 600;
     margin-bottom: 1.5rem;
+    color: hsl(var(--primary));
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
 .form {
@@ -208,9 +205,6 @@ body {
     flex-direction: column;
     gap: 0.5rem;
 }
-
-
-
 
 .form-label {
     font-size: 0.875rem;
@@ -237,7 +231,6 @@ body {
     box-shadow: 0 0 0 3px hsl(var(--primary) / 0.1);
 }
 
-
 .btn {
     padding: 0.5rem 1rem;
     border: none;
@@ -249,18 +242,14 @@ body {
 }
 
 .btn-primary {
-    background-color: hsl(var(--primary));
+    background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--secondary)));
     color: hsl(var(--primary-foreground));
+    box-shadow: 0 2px 8px hsl(var(--primary) / 0.3);
 }
-
-.card-lado{
-    display: flex;
-    gap: 10vh;
-}
-
 
 .btn-primary:hover {
-    opacity: 0.9;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px hsl(var(--primary) / 0.4);
 }
 
 .btn-destructive {
@@ -312,10 +301,11 @@ body {
     padding: 0.25rem 0.75rem;
     margin-top: 0.5rem;
     border-radius: 9999px;
-    background-color: hsl(var(--primary) / 0.1);
+    background: linear-gradient(135deg, hsl(var(--primary) / 0.15), hsl(var(--secondary) / 0.15));
     color: hsl(var(--primary));
     font-size: 0.75rem;
     font-weight: 500;
+    border: 1px solid hsl(var(--primary) / 0.2);
 }
 
 .task-item {
@@ -365,9 +355,6 @@ body {
     justify-content: center;
 }
 
-
-
-
 .modal.active {
     display: flex;
 }
@@ -381,7 +368,6 @@ body {
     width: 90%;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 }
-
 
 .modal-title {
     font-size: 1.5rem;
@@ -420,8 +406,9 @@ body {
 }
 
 .btn-success {
-    background-color: hsl(142 76% 36%);
+    background: linear-gradient(135deg, hsl(var(--success)), hsl(var(--accent)));
     color: white;
+    box-shadow: 0 2px 8px hsl(var(--success) / 0.3);
 }
 
 .btn-success:hover {
@@ -463,9 +450,6 @@ body {
   transform: scale(1.2);
 }
 
-
-
-
 @media (max-width: 768px) {
     .mobile-menu-btn {
         display: block;
@@ -490,8 +474,6 @@ body {
     }
 }
 
-
-
 @media (max-width: 640px) {
     .section-title {
         font-size: 1.5rem;
@@ -513,7 +495,6 @@ body {
         grid-template-columns: 1fr;
     }
 }
-
 
 /* TOAST  */
 

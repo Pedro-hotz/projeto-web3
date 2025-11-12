@@ -7,9 +7,9 @@
 
 [-] Fazer backoffice 
 
-[ ] Tratamento de erro no login 
+[ ] campo de busca para usuário 
 
-[ ] Adicionar showtoast 
+[ ] Tratamento de erro no login 
 
 [ ] Ver sobre responsividade 
 
@@ -17,9 +17,9 @@
 
 [ ] Como ajudar / compartilhar 
 
-[ ] CRUD 
 
-[ ] Ajustar o projeto para dar um comando e instalar todas as libs 
+
+[+] Ajustar o projeto para dar um comando e instalar todas as libs 
 
 [+] Serviço de email 
 

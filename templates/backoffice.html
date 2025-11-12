@@ -37,14 +37,14 @@
                     </svg>
                     <span>Lista de Tarefas</span>
                 </button>
+
                 <button class="nav-button" data-section="tasks">
                     <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <line x1="8" y1="6" x2="21" y2="6"></line>
-                        <line x1="8" y1="12" x2="21" y2="12"></line>
-                        <line x1="8" y1="18" x2="21" y2="18"></line>
-                        <line x1="3" y1="6" x2="3.01" y2="6"></line>
-                        <line x1="3" y1="12" x2="3.01" y2="12"></line>
-                        <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                        <polyline points="10 9 9 9 8 9"></polyline>
                     </svg>
                     <span>Relatórios</span>
                 </button>
@@ -88,46 +88,55 @@
         <section id="usersSection" class="content-section active">
             <div class="section-header">
                 <h1 class="section-title">Gestão de Usuários</h1>
-                <p class="section-description">Adicione e gerencie usuários do sistema</p>
 
             </div>
 
-            <div class="card-lado">
-                <div class="card add-card">
-                    <h2 class="card-title">Adicionar Novo Usuário</h2>
-                    <form id="userForm" class="form" action="/addUser" method="POST">
-                        <div class="form-group">
-                            <label class="form-label">Nome</label>
-                            <input type="text" id="userName" name="nome" class="form-input" placeholder="Digite o nome"
-                                required>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Email</label>
-                            <input type="email" id="userEmail" name="email" class="form-input"
-                                placeholder="Digite o email" required>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Senha</label>
-                            <input type="password" id="userPassword" name="senha" class="form-input"
-                                placeholder="Digite a senha" required>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Papel</label>
-                            <select id="userRole" name="tipo" class="form-select">
-                                <option value="">Selecione um papel</option>
-                                <option value="admin">Admin</option>
-                                <option value="editor">Editor</option>
-                            </select>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Adicionar Usuário</button>
-                    </form>
-                </div>
+            <div class="card add-card">
+                <h2 class="card-title">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <line x1="19" y1="8" x2="19" y2="14"></line>
+                        <line x1="22" y1="11" x2="16" y2="11"></line>
+                    </svg>
+                    Adicionar Novo Usuário
+                </h2>
+                <form id="userForm" class="form" action="/addUser" method="POST">
+                    <div class="form-group">
+                        <input type="text" id="userName" name="nome" class="form-input" placeholder="Digite o nome"
+                            required>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" id="userEmail" name="email" class="form-input" placeholder="Digite o email"
+                            required>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" id="userPassword" name="senha" class="form-input"
+                            placeholder="Digite a senha" required>
+                    </div>
+                    <div class="form-group">
+                        <select id="userRole" name="tipo" class="form-select">
+                            <option value="">Selecione um papel</option>
+                            <option value="admin">Admin</option>
+                            <option value="editor">Editor</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <line x1="19" y1="8" x2="19" y2="14"></line>
+                            <line x1="22" y1="11" x2="16" y2="11"></line>
+                        </svg>
+                        Adicionar Usuário
+                    </button>
+                </form>
+            </div>
 
-                <div class="card">
-                    <h2 class="card-title">Usuários Cadastrados</h2>
-                    <div id="usersList" class="users-list"></div>
-                    <div id="pagination" class="pagination"></div>
-                </div>
+            <div class="card">
+                <h2 class="card-title" name="usersListTitle" id="usersListTitle"></h2>
+                <div id="usersList" class="users-list"></div>
+                <div id="pagination" class="pagination"></div>
             </div>
         </section>
 
@@ -136,20 +145,26 @@
         <section id="tasksSection" class="content-section">
             <div class="section-header">
                 <h1 class="section-title">Lista de Tarefas</h1>
-                <p class="section-description">Gerencie suas tarefas e atividades</p>
             </div>
 
             <div class="card add-card">
-                <h2 class="card-title">Adicionar Nova Tarefa</h2>
-                <form id="taskForm" class="form">
+                <h2 class="card-title">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    Adicionar Nova Tarefa
+                </h2>
+                <form id="taskForm" class="form" action="/addTasks" method="POST">
                     <div class="form-group">
                         <label class="form-label">Título da Tarefa</label>
-                        <input type="text" id="taskTitle" class="form-input" placeholder="Digite o título" required>
+                        <input type="text" id="taskTitle" name="titulo" class="form-input" placeholder="Digite o título"
+                            required>
                     </div>
                     <div class="form-group">
                         <label class="form-label">Descrição</label>
-                        <textarea id="taskDescription" class="form-textarea" placeholder="Digite a descrição"
-                            rows="3"></textarea>
+                        <textarea id="taskDescription" name="descricao" class="form-textarea"
+                            placeholder="Digite a descrição" rows="3"></textarea>
                     </div>
                     <button type="submit" class="btn btn-primary">Adicionar Tarefa</button>
                 </form>
@@ -170,7 +185,7 @@
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="../static/js/backoffice.js"></script>
+
 
     {% with mensagens = get_flashed_messages(with_categories=true) %}
     {% if mensagens %}
@@ -185,7 +200,8 @@
     {% endif %}
     {% endwith %}
 
-    <script src="{{ url_for('static', filename='js/alertas.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/backoffice.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/alert.service.js') }}"></script>
 
 </body>
 

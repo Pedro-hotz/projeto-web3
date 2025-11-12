@@ -13,7 +13,7 @@ IF /I "%1"=="run" (
     goto :EOF
 )
 
-IF /I "%1"=="d-run" (
+IF /I "%1"=="docker run" (
     echo [SCRIPT]: Inicializando container Docker...
     docker run --name ong -e POSTGRES_USER=appuser -e POSTGRES_PASSWORD=minhasenha -e POSTGRES_DB=projeto_faculdade -p 5432:5432 -d postgres
     goto :EOF

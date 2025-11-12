@@ -82,24 +82,7 @@ def concluido():
            return jsonify({'status': 'erro', 'mensagem': f'Falha ao realizar login: {e}'})
        
 
-@app.route('/remover', methods=['POST'])
-def remover():
-   if request.method == 'POST':
-       email = request.form['email']
-       senha = request.form['senha']
-
-       usuario = Usuario.query.filter_by(email=email, senha=senha).first()
-
-       try:
-           if usuario:  
-               return redirect(url_for("backoffice"))
-           else:
-               return jsonify({'status': 'erro', 'mensagem': 'Usuário ou senha inválidos.'})
-
-       except Exception as e:
-           return jsonify({'status': 'erro', 'mensagem': f'Falha ao realizar login: {e}'})
-
-       
+# USERS =============================================
 @app.route('/addUser', methods=['POST'])
 def addUser():
    if request.method == 'POST':
@@ -112,12 +95,50 @@ def addUser():
         novo_usuario = Usuario(nome=nome, email=email, senha=senha, tipo=tipo)
         db.session.add(novo_usuario)
         db.session.commit()
-        flash("pepeka do mal!", "success")
+        flash("Usuário criado com sucesso!", "success")
         return redirect(url_for("backoffice"))
-       
+
        except Exception as e:
            flash(f"Erro ao enviar formulário: {e}", "error")
            return redirect(url_for("backoffice"))
+       
+@app.route('/searchUsers/<nome>', methods=['GET'])
+def searchUsers(nome):
+   if request.method == 'GET':
+
+       try:
+           usuarios = Usuario.query.filter(
+               Usuario.nome.contains(nome)
+           ).all()
+
+
+           return jsonify([{
+               'nome': usuario.nome,
+               'email': usuario.email,
+               'senha': usuario.senha,
+               'tipo': usuario.tipo
+           } for usuario in usuarios])
+
+       except Exception as e:
+           return jsonify({'status': 'erro', 'mensagem': f'Falha ao buscar usuários: {e}'})
+
+       
+    #     return redirect(url_for("backoffice"))
+
+    #    except Exception as e:
+    #        flash(f"Erro ao enviar formulário: {e}", "error")
+    #        return redirect(url_for("backoffice"))
+
+@app.route('/deleteUser/<id>', methods=['DELETE'])
+def deleteUser(id):
+    usuario = Usuario.query.get(id)
+
+    if usuario:
+        db.session.delete(usuario)
+        db.session.commit()
+        return jsonify({'status': 'sucesso', 'mensagem': 'Usuário removido com sucesso.'})
+    else:
+        return jsonify({'status': 'erro', 'mensagem': 'Usuário não encontrado.'})
 
 
 @app.route('/users', methods=['GET'])
@@ -130,18 +151,48 @@ def getUsers():
             'id': usuario.id,
             'nome': usuario.nome,
             'email': usuario.email,
+            'senha': usuario.senha,
             'tipo': usuario.tipo
+        })
+
+    return jsonify(lista)
+# ==================================================
+
+
+# TASKS =============================================
+@app.route('/tasks', methods=['GET'])
+def getTasks():
+    tasks = Task.query.all()
+    lista = []
+
+    for task in tasks:
+        lista.append({
+            'titulo': task.titulo,
+            'descricao': task.descricao,
+            'completa': task.completa
         })
 
     return jsonify(lista)
 
 
+@app.route('/addTasks', methods=['POST'])
+def addTasks():
+    titulo = request.form['titulo']
+    descricao = request.form['descricao']
 
-@app.route('/tasks', methods=['GET'])
-def getTasks():
-   if request.method == 'GET':
-       tasks = Task.query.all()
-       return jsonify([{'id': t.id, 'titulo': t.titulo, 'descricao': t.descricao, 'completa': t.completa} for t in tasks])
+    try:
+        nova_tarefa = Task(titulo=titulo, descricao=descricao, completa=False)
+        db.session.add(nova_tarefa)
+        db.session.commit()
+
+        return render_template("backoffice.html")
+
+    except Exception as e:
+        db.session.rollback()
+        flash(f"Erro ao adicionar tarefa: {e}", "error")
+        return redirect(url_for("backoffice"))
+
+# ==============================================
 
 
 
