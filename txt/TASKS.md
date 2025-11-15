@@ -5,13 +5,11 @@
 [ ] DAR UM JEITO NA SECRET_KEY
 ================================
 
-
-
 [ ] campo de busca para usuário 
 
 [ ] SMS ?
 
-[ ] Tratamento de erro no login 
+[+] Tratamento de erro no login 
 
 [ ] Ver sobre responsividade 
 

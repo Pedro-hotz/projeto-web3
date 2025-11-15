@@ -1,7 +1,8 @@
 import os
 from main import Task, app, db, Tarefa, Usuario, mail
-from flask import jsonify, redirect, render_template, request, url_for, flash
+from flask import jsonify, redirect, render_template, request, session, url_for, flash
 from flask_mail import Message
+from auth import login_required
 
 ## Aqui nos chamamos todas as rotas
 
@@ -12,6 +13,7 @@ def home():
 
 
 @app.route("/backoffice")
+@login_required
 def backoffice():
     return render_template("backoffice.html") # Quando a url bater na rota, o Flask vai renderizar/chamar o template backoffice.html
 
@@ -46,61 +48,65 @@ def teste_conexao():
         return f'❌ **FALHA NA CONEXÃO OU OPERAÇÃO:** Verifique seu container Docker e suas credenciais. Erro: {e}'
     
 
+# LOGIN =============================================
 @app.route('/login', methods=['POST'])
 def login():
-   if request.method == 'POST':
-       email = request.form['email']
-       senha = request.form['senha']
+    email = request.form.get('email')
+    senha = request.form.get('senha')
 
-       usuario = Usuario.query.filter_by(email=email, senha=senha).first()
+    if not email or not senha:
+        return jsonify({
+            "status": "erro",
+            "mensagem": "Por favor, preencha todos os campos."
+        }), 400
 
-       try:
-           if usuario:  
-               return redirect(url_for("backoffice"))
-           else:
-               return jsonify({'status': 'erro', 'mensagem': 'Usuário ou senha inválidos.'})
+    usuario = Usuario.query.filter_by(email=email, senha=senha).first()
 
-       except Exception as e:
-           return jsonify({'status': 'erro', 'mensagem': f'Falha ao realizar login: {e}'})
-       
-
-@app.route('/concluido', methods=['POST'])
-def concluido():
-   if request.method == 'POST':
-       email = request.form['email']
-       senha = request.form['senha']
-
-       usuario = Usuario.query.filter_by(email=email, senha=senha).first()
-
-       try:
-           if usuario:  
-               return redirect(url_for("backoffice"))
-           else:
-               return jsonify({'status': 'erro', 'mensagem': 'Usuário ou senha inválidos.'})
-
-       except Exception as e:
-           return jsonify({'status': 'erro', 'mensagem': f'Falha ao realizar login: {e}'})
+    if usuario:
+        session['user_id'] = usuario.id
+        return jsonify({
+            "status": "sucesso",
+            "mensagem": "Login realizado com sucesso!",
+            "redirect": url_for("backoffice")
+        })
+    else:
+        return jsonify({
+            "status": "erro",
+            "mensagem": "Credenciais inválidas. Tente novamente."
+        }), 401
+# ==================================================
        
 
 # USERS =============================================
 @app.route('/addUser', methods=['POST'])
 def addUser():
-   if request.method == 'POST':
-       nome = request.form['nome']
-       email = request.form['email']
-       senha = request.form['senha']
-       tipo = request.form['tipo']
+    nome = request.form.get('nome')
+    email = request.form.get('email')
+    senha = request.form.get('senha')
+    tipo = request.form.get('tipo')
 
-       try: 
+    if not nome or not email or not senha or not tipo:
+        return jsonify({
+            "status": "erro",
+            "mensagem": "Preencha todos os campos!"
+        }), 400
+
+    try:
         novo_usuario = Usuario(nome=nome, email=email, senha=senha, tipo=tipo)
         db.session.add(novo_usuario)
         db.session.commit()
-        flash("Usuário criado com sucesso!", "success")
-        return redirect(url_for("backoffice"))
 
-       except Exception as e:
-           flash(f"Erro ao enviar formulário: {e}", "error")
-           return redirect(url_for("backoffice"))
+        return jsonify({
+            "status": "sucesso",
+            "mensagem": "Usuário criado com sucesso!",
+            "redirect": url_for("backoffice")
+        }), 200
+
+    except Exception as e:
+        return jsonify({
+            "status": "erro",
+            "mensagem": f"Erro ao criar usuário: {str(e)}"
+        }), 500
        
 @app.route('/searchUsers/<nome>', methods=['GET'])
 def searchUsers(nome):
@@ -122,12 +128,6 @@ def searchUsers(nome):
        except Exception as e:
            return jsonify({'status': 'erro', 'mensagem': f'Falha ao buscar usuários: {e}'})
 
-       
-    #     return redirect(url_for("backoffice"))
-
-    #    except Exception as e:
-    #        flash(f"Erro ao enviar formulário: {e}", "error")
-    #        return redirect(url_for("backoffice"))
 
 @app.route('/deleteUser/<id>', methods=['DELETE'])
 def deleteUser(id):
@@ -141,7 +141,7 @@ def deleteUser(id):
         return jsonify({'status': 'erro', 'mensagem': 'Usuário não encontrado.'})
 
 
-@app.route('/users', methods=['GET'])
+@app.route('/users', methods=['GET'])  # Retorna a lista de TODOS usuários em formato JSON
 def getUsers():
     usuarios = Usuario.query.all()
     lista = []
@@ -195,7 +195,7 @@ def addTasks():
 # ==============================================
 
 
-
+#  ENVIAR EMAIL =============================================
 @app.route('/enviarEmail', methods=['POST'])
 def enviarEmail():
    if request.method == 'POST': 
@@ -231,3 +231,4 @@ def enviarEmail():
        
        except Exception as e:
            return jsonify({'status': 'erro', 'mensagem': f'Falha ao enviar e-mail: {e}'})
+# ==================================================

@@ -79,7 +79,7 @@ function showToast(icon, title) {
         toast: true,
         position: 'top-end',
         showConfirmButton: false,
-        timer: 3000,
+        timer: 2000,
         timerProgressBar: true,
     });
 }
@@ -130,42 +130,7 @@ function getRoleName(tipo) {
     return roleNames[tipo] || tipo;
 }
 
-/**
- * Renderiza a lista de usuários paginada.
- */
-function renderUsers() {
-    if (!users || users.length === 0) {
-        usersListContainer.innerHTML = '<div class="empty-state">Nenhum usuário cadastrado</div>';
-        paginationContainer.innerHTML = '';
-        return;
-    }
 
-
-
-    const startIndex = (currentPage - 1) * USERS_PER_PAGE;
-    const endIndex = startIndex + USERS_PER_PAGE;
-    const paginatedUsers = users.slice(startIndex, endIndex);
-
-    usersListContainer.innerHTML = paginatedUsers.map(user => `
-    <div class="user-item">
-        <div class="user-info">
-            <div class="user-name">${user.nome}</div>
-            <div class="user-email">${user.email}</div>
-            <span class="user-role role-${user.tipo}">${getRoleName(user.tipo)}</span>
-        </div>
-        <button class="btn btn-destructive" onclick="confirmRemoveUser(${user.id}, '${user.nome}')">Remover</button>
-    </div>
-    `).join('');
-
-}
-
-/**
- * Mostra o modal de confirmação para remoção de usuário.
- */
-/**
- * Envia a requisição DELETE para a API do Flask para remover um usuário.
- * @param {number} id - O ID do usuário a ser removido.
- */
 async function removeUser(id) {
     try {
         // Altera a rota de chamada para a sua rota Flask /deleteUser/<id>
@@ -178,10 +143,10 @@ async function removeUser(id) {
 
         if (response.ok && data.status === 'sucesso') {
             // Sucesso na remoção
-            showToast('success', data.mensagem);
+            showToast('info', data.mensagem);
             setTimeout(() => {
                 location.reload();
-            }, 3100);
+            }, 2000);
 
             
         } else {
@@ -199,21 +164,23 @@ async function removeUser(id) {
  * Mostra o modal de confirmação para remoção de usuário (usando SweetAlert2).
  * Esta função deve chamar removeUser(id) se confirmada.
  */
-function confirmRemoveUser(id, nome) {
+function confirmRemoveUser(id) {
+    const user = users.find(u => u.id === id);
+
     Swal.fire({
         title: "Tem certeza?",
-        text: `Você realmente deseja remover o usuário ${nome}?`,
+        text: `Você realmente deseja remover o usuário ${user.nome}?`,
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#dc3545",
         cancelButtonColor: "#6c757d",
         confirmButtonText: "Sim, remover!",
         cancelButtonText: "Cancelar"
-    }).then((result) => {
+    }).then(result => {
         if (result.isConfirmed) {
-            // Se confirmado, chama a função de remoção que se comunica com o Flask
             removeUser(id);
-        }
+        } else 
+            showToast("info", "Operação cancela !")
     });
 }
 
@@ -377,31 +344,6 @@ taskForm.addEventListener('submit', (e) => {
     }
 });
 
-// Notification System
-function showNotification(message) {
-    const notification = document.createElement('div');
-    notification.style.cssText = `
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
-        background-color: hsl(var(--primary));
-        color: white;
-        padding: 1rem 1.5rem;
-        border-radius: var(--radius);
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        z-index: 1000;
-        animation: slideIn 0.3s ease;
-    `;
-    notification.textContent = message;
-
-    document.body.appendChild(notification);
-
-    setTimeout(() => {
-        notification.style.animation = 'slideOut 0.3s ease';
-        setTimeout(() => notification.remove(), 300);
-    }, 3000);
-}
-
 // Add CSS animations
 const style = document.createElement('style');
 style.textContent = `
@@ -465,7 +407,7 @@ function renderUsers() {
             <div class="user-email">${user.email}</div>
             <span class="user-role">${getRoleName(user.tipo)}</span>
         </div>
-        <button class="btn btn-destructive" onclick="removeUser(${user.id})">Remover</button>
+        <button class="btn btn-destructive" onclick="confirmRemoveUser(${user.id}, '${user.nome}')">Remover</button>
     </div>
   `).join('');
 
@@ -490,4 +432,53 @@ function renderUsers() {
 
 
 
+
+
+const formAddUser = document.getElementById("formAddUser");
+
+formAddUser.addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    const formData = new FormData(formAddUser);
+
+    fetch(formAddUser.action, {
+        method: "POST",
+        body: formData
+    })
+    .then(response => {
+        return response.json().then(json => {
+            return { ok: response.ok, json };
+        });
+    })
+    .then(result => {
+        const { ok, json } = result;
+
+        if (ok) {
+
+            if (typeof showToast === "function") {
+                showToast("success", "Usuário adicionado com sucesso!");
+            }
+
+            if (json.redirect) {
+                setTimeout(() => {
+                    window.location.href = json.redirect;
+                }, 2000);
+            }
+
+            // limpar formulário
+            formAddUser.reset();
+        }
+
+        else {
+
+            if (typeof showToast === "function") {
+                showToast("error", "Erro ao adicionar usuário!");
+            }
+        }
+    })
+    .catch(err => {
+        console.error("Erro:", err);
+        showToast("error", err);
+    });
+});
 
