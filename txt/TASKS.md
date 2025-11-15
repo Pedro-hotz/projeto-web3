@@ -9,16 +9,15 @@
 
 [ ] SMS ?
 
-[+] Tratamento de erro no login 
-
 [ ] Ver sobre responsividade 
 
 [ ] Relatório de tasks feitas
 
-[ ] Como ajudar / compartilhar 
+[-] Como ajudar / compartilhar 
 
 
 
+[+] Tratamento de erro no login 
 
 [+] Fazer backoffice
  
