@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"> <!-- Direciona para o css atual -->
+  <link rel="stylesheet" href="../static/css/style.css"> <!-- Direciona para o css atual lemnbrar de mudar, rodei diferente pra nao precisar de flask--> 
 
   <title>Home</title>
 </head>
@@ -15,7 +15,7 @@
   <header class="header">
     <div class="header-container">
       <a href="#" class="logo">
-        ❤️ Esperança
+         <img src=".\transparente.png" alt="logo"> <!--Logo em png/Não ta rodando sem o flask-->
       </a>
       <nav class="nav">
         <a href="#missao">Nossa Missão</a>
@@ -35,7 +35,7 @@
         Transformando Vidas,<br>
         <span class="gradient-text">Construindo Futuros</span>
       </h1>
-      <p>Juntos, podemos fazer a diferença. Cada ação conta, cada doação transforma.</p>
+      <p>Juntos, podemos plantar a semente de um futuro melhor. Cada ação conta, cada doação transforma.</p>
       <div class="hero-buttons">
         <a data-abrir-modal="pix" class="btn btn-action">Doar Agora</a>
       </div>
@@ -48,25 +48,26 @@
       <div class="section-header">
         <h2>Nossa Missão</h2>
         <div class="section-divider"></div>
-        <p>Promover dignidade, educação e esperança para comunidades em vulnerabilidade, criando oportunidades
-          sustentáveis de desenvolvimento e transformação social.</p>
+        <p>Plantar pequenas ações que terão enorme ressonância com o nosso cuidado 
+          ao processo de (des)envolvimento e sensibilização aos afetos, cultivando 
+          coletividade com o plantio de "sementes que se transformarão em florestas".</p>
       </div>
 
       <div class="grid grid-3">
         <div class="card">
           <div class="card-icon">❤️</div>
-          <h3>Compaixão</h3>
-          <p>Agimos com empatia e dedicação para transformar realidades</p>
+          <h3>VidArtEducação</h3>
+          <p>No ramo artístico-educacional</p>
         </div>
         <div class="card">
           <div class="card-icon">👥</div>
-          <h3>Comunidade</h3>
-          <p>Construímos pontes e fortalecemos laços sociais</p>
+          <h3>Básico Do Básico</h3>
+          <p>Contra a vulnerabilidade social</p>
         </div>
         <div class="card">
           <div class="card-icon">🌍</div>
-          <h3>Impacto Global</h3>
-          <p>Mudanças locais que geram transformações globais</p>
+          <h3>Organiza Organismo</h3>
+          <p>No aspecto socioambiental</p>
         </div>
       </div>
     </div>
@@ -78,7 +79,9 @@
       <div class="section-header">
         <h2>Áreas de Atuação</h2>
         <div class="section-divider"></div>
-        <p>Trabalhamos em múltiplas frentes para garantir desenvolvimento integral das comunidades</p>
+        <p>Nosso principal público-alvo é a juventude favelada e periférica, mas cada 
+          projeto tem suas especificidades, atendendo a crianças, artistas, pessoas em situação de rua, 
+          entre outros, incluindo projetos com público geral. Alguns de nossos projetos são:</p>
       </div>
 
       <div class="grid grid-4">
@@ -88,8 +91,8 @@
             <div class="cause-card-overlay"></div>
           </div>
           <div class="cause-card-content">
-            <h3>🎓 Educação</h3>
-            <p>Construindo futuros através do conhecimento e formação de qualidade</p>
+            <h3>🎓 Sorriso Literário</h3>
+            <p>Distribuição de livros em espaços públicos - "Compre um livro, custa 1 sorriso"</p>
           </div>
         </div>
         <div class="cause-card">
@@ -98,8 +101,8 @@
             <div class="cause-card-overlay"></div>
           </div>
           <div class="cause-card-content">
-            <h3>🍽️ Alimentação</h3>
-            <p>Garantindo segurança alimentar e nutrição adequada para famílias</p>
+            <h3>🧸 Brincadeira de Cria</h3>
+            <p>Distribuição de brinquedos e realização de atividades de lazer e entretenimento para crianças</p>
           </div>
         </div>
         <div class="cause-card">
@@ -108,8 +111,8 @@
             <div class="cause-card-overlay"></div>
           </div>
           <div class="cause-card-content">
-            <h3>💧 Água Potável</h3>
-            <p>Acesso a água limpa e saneamento básico para comunidades</p>
+            <h3>📚 Discordando Nós Aprende (DNA)</h3> <!-- MUDAR IMAGEM PARA UMA MAIS CONDIZENTE -->
+            <p>Clube de debate e Cineclube</p>
           </div>
         </div>
         <div class="cause-card">
@@ -118,8 +121,8 @@
             <div class="cause-card-overlay"></div>
           </div>
           <div class="cause-card-content">
-            <h3>🏠 Moradia</h3>
-            <p>Construindo lares dignos e seguros para famílias necessitadas</p>
+            <h3>🔠 Favelado Poliglota</h3>     <!-- MUDAR IMAGEM PARA UMA MAIS CONDIZENTE -->
+            <p>Aulas de inglês, espanhol, francês e etc.</p>
           </div>
         </div>
       </div>
@@ -132,30 +135,30 @@
       <div class="section-header">
         <h2>Nosso Impacto</h2>
         <div class="section-divider"></div>
-        <p>Números que representam vidas transformadas e esperança renovada</p>
+        <p>Histórias que representam vidas transformadas e esperança renovada</p>
       </div>
 
       <div class="grid grid-4">
         <div class="stats-card">
           <div style="font-size: 3rem; color: var(--primary);">👥</div>
-          <div class="stats-value">50.000+</div>
-          <div class="stats-label">Vidas Impactadas</div>
+          <div class="stats-value">Milhares</div>
+          <div class="stats-label">de vidas Impactadas</div>
         </div>
         <div class="stats-card">
           <div style="font-size: 3rem; color: var(--secondary);">❤️</div>
-          <div class="stats-value">1.200+</div>
-          <div class="stats-label">Voluntários Ativos</div>
+          <div class="stats-value">Dezenas</div>
+          <div class="stats-label">de voluntários Ativos</div>
         </div>
         <div class="stats-card">
           <div style="font-size: 3rem; color: var(--action);">🏠</div>
-          <div class="stats-value">350+</div>
-          <div class="stats-label">Projetos Realizados</div>
+          <div class="stats-value">50+</div>
+          <div class="stats-label">projetos Realizados</div>
         </div>
-        <div class="stats-card">
-          <div style="font-size: 3rem; color: var(--primary-light);">🎓</div>
+        <!-- <div class="stats-card">
+          <div style="font-size: 3rem; color: var(--primary-light); ">🎓</div>
           <div class="stats-value">25.000+</div>
           <div class="stats-label">Crianças Educadas</div>
-        </div>
+        </div> -->
       </div>
     </div>
   </section>
@@ -171,15 +174,15 @@
 
       <div class="grid grid-4">
         <div class="card" style="text-align: center;">
-          <div class="card-icon" style="margin: 0 auto 1.5rem;">💵</div>
+          <div class="card-icon" style="margin: 0 auto 1.5rem; background: linear-gradient(135deg, var(--action), hsl(25, 95%, 65%));">💵</div>
           <h3>Faça uma Doação</h3>
-          <p>Contribua financeiramente com qualquer valor. Cada centavo faz diferença.</p>
+          <p>Contribua financeiramente com qualquer valor no nosso apoia-se. Cada centavo faz diferença.</p>
           <br>
           <a data-abrir-modal="pix" class="btn btn-action">Doar Agora</a>
         </div>
         <div class="card" style="text-align: center;">
           <div class="card-icon"
-            style="margin: 0 auto 1.5rem; background: linear-gradient(135deg, var(--secondary), var(--primary));">👥
+            style="margin: 0 auto 1.5rem; background: linear-gradient(135deg, var(--action), hsl(25, 95%, 65%));">👥
           </div>
           <h3>Seja Voluntário</h3>
           <p>Doe seu tempo e talento. Junte-se ao nosso time de voluntários.</p>
@@ -187,7 +190,7 @@
           <a data-abrir-modal="lead" class="btn btn-action">Inscrever-se</a>
         </div>
         <div class="card" style="text-align: center;">
-          <div class="card-icon" style="margin: 0 auto 1.5rem;">📢</div>
+          <div class="card-icon" style="margin: 0 auto 1.5rem; background: linear-gradient(135deg, var(--action), hsl(25, 95%, 65%));">📢</div>
           <h3>Compartilhe</h3>
           <p>Ajude-nos a alcançar mais pessoas compartilhando nossa missão.</p>
           <br>
@@ -227,15 +230,14 @@
         <div>
           <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;">
             <span style="font-size: 2rem;">❤️</span>
-            <span style="font-size: 1.5rem; font-weight: bold;">Esperança</span>
+            <span style="font-size: 1.5rem; font-weight: bold;">Sementes de Afeto</span>
           </div>
           <p style="opacity: 0.8; margin-bottom: 1rem;">Transformando vidas através do amor, dedicação e ação
             comunitária.</p>
           <div class="social-links">
-            <a href="#" class="social-link">📘</a>
-            <a href="#" class="social-link">📷</a>
-            <a href="#" class="social-link">🐦</a>
-            <a href="#" class="social-link">💼</a>
+            <a href="https://www.instagram.com/sdafeto?igsh=MWN5OXFrMGFxZ2k4cw==" target="_blank" class="social-link">📷</a>
+            <a href="https://youtube.com/@sdafeto?si=V4z39Vbc7g8VEKfM" target="_blank "class="social-link">▶️</a>
+            <a href="https://linktr.ee/sementesdeafeto?utm_source=linktree_profile_share&ltsid=81580f9b-34c7-4e17-8010-e76db4126b96" target="_blank "class="social-link">🌳</a>
           </div>
         </div>
 
@@ -249,7 +251,7 @@
           </ul>
         </div>
 
-        <div>
+        <!-- <div>
           <h3>Recursos</h3>
           <ul>
             <li><a href="#">Blog</a></li>
@@ -257,20 +259,20 @@
             <li><a href="#">Transparência</a></li>
             <li><a href="#">Contato</a></li>
           </ul>
-        </div>
+        </div> -->
 
         <div>
           <h3>Contato</h3>
           <ul>
-            <li>📍 Rua da Esperança, 123<br>São Paulo, SP</li>
-            <li>📞 (11) 1234-5678</li>
-            <li>✉️ contato@esperanca.org.br</li>
+            <!-- <li>📍 Rua da Esperança, 123<br>São Paulo, SP</li> -->
+            <li>📞 (21) 984195611 -  (21) 997106443</li>
+            <li>✉️ contatosementesdeafeto@gmail.com</li>
           </ul>
         </div>
       </div>
 
       <div class="footer-bottom">
-        <p>© 2024 ONG Esperança. Todos os direitos reservados. CNPJ: 00.000.000/0001-00</p>
+        <p>© 2025 Sementes de Afeto. Todos os direitos reservados.</p>
       </div>
     </div>
   </footer>

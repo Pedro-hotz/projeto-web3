@@ -20,6 +20,8 @@
     --input: 214.3 31.8% 91.4%;
     --destructive: 0 84.2% 60.2%;
     --radius: 0.5rem;
+    --laranja:#ff850a;
+    --verde:#09332c;
 }
 
 body {
@@ -35,7 +37,7 @@ body {
     left: 0;
     height: 100vh;
     width: 16rem;
-    background: linear-gradient(180deg, hsl(var(--primary)) 0%, hsl(var(--secondary)) 100%);
+    background: linear-gradient(135deg, var(--laranja), var(--verde));;
     border-right: 1px solid hsl(var(--border));
     transition: transform 0.3s ease;
     z-index: 40;
@@ -242,7 +244,7 @@ button.btn.btn-primary {
 }
 
 .btn-primary {
-    background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--secondary)));
+    background: linear-gradient(135deg, var(--verde), var(--laranja));
     color: hsl(var(--primary-foreground));
     box-shadow: 0 2px 8px hsl(var(--primary) / 0.3);
 }

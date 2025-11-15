@@ -5,16 +5,27 @@
 }
 
 :root {
-  --primary: hsl(201, 89%, 48%);
-  --primary-light: hsl(201, 89%, 65%);
+  --primary: #09332c;
+  --primary-light: #ff850a;
   --primary-dark: hsl(201, 89%, 35%);
-  --secondary: hsl(142, 76%, 45%);
+  --secondary: #ff850a;
   --secondary-light: hsl(142, 76%, 60%);
-  --action: hsl(25, 95%, 53%);
+  --action:#d0531c;
   --foreground: hsl(222, 47%, 11%);
   --background: hsl(0, 0%, 100%);
   --muted: hsl(210, 40%, 96%);
   --muted-foreground: hsl(215, 16%, 47%);
+  --bege:#e9e6df;
+  --marrom:#4a3328;
+
+
+  /* cores da paleta da empresa:
+  Laranja 1: #d0531c
+  Verde escuro 2: #09332c
+  Marrom 3: #4a3328
+  bege 4: #e9e6df
+  laranka claro 5: #ff850a
+   */
 }
 
 body {
@@ -155,7 +166,7 @@ body {
 }
 
 .hero .gradient-text {
-  background: linear-gradient(to right, var(--primary-light), var(--secondary-light));
+  background: linear-gradient(135deg, var(--secondary), var(--primary-light));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -253,7 +264,7 @@ body {
 .card-icon {
   width: 4rem;
   height: 4rem;
-  background: linear-gradient(135deg, var(--background), var(--primary-light));
+  background:linear-gradient(135deg, var(--action), hsl(25, 95%, 65%));
   border-radius: 1rem;
   display: flex;
   align-items: center;
@@ -305,7 +316,7 @@ body {
 .cause-card-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, var(--primary), transparent);
+  background: linear-gradient(to top, var(--marrom), transparent);
   opacity: 0.6;
 }
 
