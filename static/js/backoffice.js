@@ -6,9 +6,6 @@ let tasks = [];
 const USERS_PER_PAGE = 3; // Constante para controle da paginação
 let currentPage = 1;
 
-// Próximo ID para tarefas locais
-let nextTaskId = 1;
-
 
 // DOM Elements
 const sidebar = document.getElementById('sidebar');
@@ -24,7 +21,7 @@ const paginationContainer = document.getElementById('pagination');
 const usersListTitle = document.getElementById('usersListTitle');
 
 // Task Form Elements
-const taskForm = document.getElementById('taskForm');
+const formAddTasks = document.getElementById('formAddTasks');
 const taskTitleInput = document.getElementById('taskTitle');
 const taskDescriptionInput = document.getElementById('taskDescription');
 const tasksList = document.getElementById('tasksList');
@@ -70,7 +67,6 @@ navButtons.forEach(button => {
 });
 
 
-// --- 1. Lógica de Usuários (API e Paginação) ---
 
 /**
  * Busca usuários na API do Flask e atualiza a lista global.
@@ -103,272 +99,32 @@ async function fetchUsers() {
     }
 }
 
-/**
- * Mapeia o tipo de usuário para um nome amigável.
- */
-function getRoleName(tipo) {
-    const roleNames = {
-        'admin': 'Administrador',
-        'editor': 'Editor',
-        'user': 'Usuário Padrão'
-    };
-    return roleNames[tipo] || tipo;
-}
-
-
-async function removeUser(id) {
+async function fetchTasks() {
     try {
-        // Altera a rota de chamada para a sua rota Flask /deleteUser/<id>
-        const response = await fetch(`/deleteUser/${id}`, {
-            method: 'DELETE'
-        });
-
-        // Tenta ler a resposta JSON (status ou erro)
-        const data = await response.json();
-
-        if (response.ok && data.status === 'sucesso') {
-            // Sucesso na remoção
-            showToast('info', data.mensagem);
-            setTimeout(() => {
-                location.reload();
-            }, 2000);
-
-            
-        } else {
-            throw new Error(data.mensagem || 'Falha desconhecida ao remover usuário.');
-        }
-
-    } catch (error) {
-        console.error('Erro na remoção:', error);
-        showToast('error', error.message || 'Erro de conexão com a API.');
-    }
-}
-
-
-/**
- * Mostra o modal de confirmação para remoção de usuário (usando SweetAlert2).
- * Esta função deve chamar removeUser(id) se confirmada.
- */
-function confirmRemoveUser(id) {
-    const user = users.find(u => u.id === id);
-
-    Swal.fire({
-        title: "Tem certeza?",
-        text: `Você realmente deseja remover o usuário ${user.nome}?`,
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#dc3545",
-        cancelButtonColor: "#6c757d",
-        confirmButtonText: "Sim, remover!",
-        cancelButtonText: "Cancelar"
-    }).then(result => {
-        if (result.isConfirmed) {
-            removeUser(id);
-        } else 
-            showToast("info", "Operação cancela !")
-    });
-}
-
-
-/**
- * Busca usuários na API do Flask, armazena globalmente e inicia a renderização.
- * @param {string} searchTerm - O termo de busca opcional (nome).
- */
-async function fetchAndRenderUsers(searchTerm = '') {
-    currentPage = 1; // Sempre volta para a primeira página em uma nova busca
-
-    let url = '/users';
-    if (searchTerm) {
-        // Usa a rota /searchUsers se você a implementou separadamente
-        url = `/searchUsers?nome=${encodeURIComponent(searchTerm)}`;
-    }
-    // NOTA: Se você usou a rota única '/searchUsers' que lida com o parâmetro opcional,
-    // a URL seria sempre: `/searchUsers?nome=${encodeURIComponent(searchTerm)}`
-
-    try {
-        const response = await fetch(url);
-
+        const response = await fetch("/tasks");
         if (!response.ok) {
             throw new Error(`Erro HTTP: ${response.status}`);
         }
 
-        const usersData = await response.json();
+        const data = await response.json();
 
-        // 1. Armazena a lista de usuários buscados
-        users = usersData;
+        tasks = data.map(t => ({
+            'titulo': t.titulo,
+            'descricao': t.descricao,
+            'completa': t.completa
+        }));
 
-        // 2. Renderiza a lista e a paginação
+        usersListTitle.innerHTML = `<h2 class="card-title tasks">Tarefas Pendentes (${tasks.length})</h2>`;
+
+
         renderUsers();
 
     } catch (error) {
-        console.error('Erro ao buscar usuários:', error);
-        usersListContainer.innerHTML = '<p class="error-message">Não foi possível carregar os usuários.</p>';
-        showToast('error', 'Erro ao carregar lista de usuários!');
+        usersListContainer.innerHTML = '<div class="empty-state">Erro ao carregar usuários.</div>';
+        console.error("Erro ao buscar tasks:", error);
+        showToast('error', 'Erro ao carregar tasks!');
     }
 }
-
-
-// --- 2. Lógica de Tarefas (Local) ---
-
-/**
- * Adiciona uma nova tarefa à lista local.
- */
-function addTask(title, description) {
-    const newTask = {
-        id: nextTaskId++,
-        title: title,
-        description: description,
-        completed: false
-    };
-    tasks.push(newTask);
-    renderTasks();
-    showToast('success', 'Tarefa adicionada!');
-}
-
-/**
- * Marca uma tarefa como concluída.
- */
-function completeTask(id) {
-    const task = tasks.find(t => t.id === id);
-    if (task) {
-        task.completed = true;
-        renderTasks();
-        showToast('success', 'Tarefa concluída!');
-    }
-}
-
-/**
- * Remove uma tarefa da lista local.
- */
-function removeTask(id) {
-    tasks = tasks.filter(task => task.id !== id);
-    renderTasks();
-    showToast('info', 'Tarefa removida.');
-}
-
-/**
- * Mostra o modal de confirmação para remoção de tarefa (Local).
- */
-function confirmRemoveTask(id) {
-    Swal.fire({
-        title: "Tem certeza?",
-        text: "Você removerá esta tarefa permanentemente.",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#dc3545",
-        cancelButtonColor: "#6c757d",
-        confirmButtonText: "Sim, remover!",
-        cancelButtonText: "Cancelar"
-    }).then((result) => {
-        if (result.isConfirmed) {
-            removeTask(id);
-        }
-    });
-}
-
-/**
- * Renderiza as listas de tarefas (pendentes e concluídas).
- */
-function renderTasks() {
-    const pendingTasks = tasks.filter(task => !task.completed);
-    const completedTasks = tasks.filter(task => task.completed);
-
-    // Renderiza pendentes
-    if (pendingTasks.length === 0) {
-        tasksList.innerHTML = '<div class="empty-state">Nenhuma tarefa pendente</div>';
-    } else {
-        tasksList.innerHTML = pendingTasks.map(task => `
-             <div class="task-item">
-                <div class="task-header">
-                    <div class="task-info" style="flex: 1;">
-                        <div class="task-title">${task.title}</div>
-                        ${task.description ? `<div class="task-description">${task.description}</div>` : ''}
-                    </div>
-                </div>
-                <div class="task-actions">
-                    <button class="btn btn-success" onclick="completeTask(${task.id})">Concluir</button>
-                    <button class="btn btn-destructive" onclick="confirmRemoveTask(${task.id})">Remover</button>
-                </div>
-            </div>
-        `).join('');
-    }
-
-    // Renderiza concluídas
-    if (completedTasks.length === 0) {
-        completedTasksList.innerHTML = '<div class="empty-state">Nenhuma tarefa concluída</div>';
-    } else {
-        completedTasksList.innerHTML = completedTasks.map(task => `
-             <div class="task-item completed">
-                <div class="task-header">
-                    <div class="task-info" style="flex: 1;">
-                        <div class="task-title">${task.title}</div>
-                        ${task.description ? `<div class="task-description">${task.description}</div>` : ''}
-                    </div>
-                </div>
-                <div class="task-actions">
-                    <button class="btn btn-destructive" onclick="confirmRemoveTask(${task.id})">Remover</button>
-                </div>
-            </div>
-        `).join('');
-    }
-}
-
-
-// Task Form Handler (Para tarefas locais)
-taskForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-
-    const title = taskTitleInput.value.trim();
-    const description = taskDescriptionInput.value.trim();
-
-    if (title) {
-        addTask(title, description);
-        taskForm.reset();
-    } else {
-        showToast('warning', 'O título da tarefa é obrigatório.');
-    }
-});
-
-// Add CSS animations
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes slideIn {
-        from {
-            transform: translateX(400px);
-            opacity: 0;
-        }
-        to {
-            transform: translateX(0);
-            opacity: 1;
-        }
-    }
-    
-    @keyframes slideOut {
-        from {
-            transform: translateX(0);
-            opacity: 1;
-        }
-        to {
-            transform: translateX(400px);
-            opacity: 0;
-        }
-    });
-});`
-
-
-// Inicializa o painel
-document.addEventListener('DOMContentLoaded', () => {
-    fetchUsers();
-    renderTasks();
-});
-
-// Torna funções globais para serem usadas no onclick no HTML gerado
-window.confirmRemoveUser = confirmRemoveUser;
-window.confirmRemoveTask = confirmRemoveTask;
-window.completeTask = completeTask;
-
-
-
 
 
 function renderUsers() {
@@ -415,6 +171,279 @@ function renderUsers() {
     }
 }
 
+function renderTasks() {
+    const tasksList = document.getElementById("tasksList");
+    const pagination = document.getElementById("paginationT");
+
+    if (!tasks || tasks.length === 0) {
+        tasksList.innerHTML = '<div class="empty-state">Nenhuma tarefa cadastrada</div>';
+        pagination.innerHTML = '';
+        return;
+    }
+
+    const startIndex = (currentPage - 1) * USERS_PER_PAGE;
+    const endIndex = startIndex + USERS_PER_PAGE;
+    const paginatedUsers = tasks.slice(startIndex, endIndex);
+
+    tasksList.innerHTML = paginatedUsers.map(t => `
+    <div class="task-item">
+        <div class="task-info">
+            <div class="task-nome">${t.titulo}</div>
+            <div class="task-descricao">${t.descricao}</div>
+        </div>
+        <button class="btn btn-destructive" onclick="confirmRemoveTask(${t.id})">
+            Concluir
+        </button>
+    </div>
+`).join('');
+
+
+    // cria bolinhas de paginação
+    const totalPages = Math.ceil(tasks.length / USERS_PER_PAGE);
+    pagination.innerHTML = '';
+
+    for (let i = 1; i <= totalPages; i++) {
+        const dot = document.createElement('div');
+        dot.classList.add('pagination-dot');
+        if (i === currentPage) dot.classList.add('active');
+
+        dot.addEventListener('click', () => {
+            currentPage = i;
+            renderTasks();
+        });
+
+        pagination.appendChild(dot);
+    }
+}
+
+
+
+
+/**
+ * Mapeia o tipo de usuário para um nome amigável.
+ */
+function getRoleName(tipo) {
+    const roleNames = {
+        'admin': 'Administrador',
+        'editor': 'Editor',
+        'user': 'Usuário Padrão'
+    };
+    return roleNames[tipo] || tipo;
+}
+
+
+async function removeUser(id) {
+    try {
+        const response = await fetch(`/deleteUser/${id}`, {
+            method: 'DELETE'
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.status === 'sucesso') {
+            showToast('info', data.mensagem);
+            setTimeout(() => {
+                location.reload();
+            }, 2000);
+
+
+        } else {
+            throw new Error(data.mensagem || 'Falha desconhecida ao remover usuário.');
+        }
+
+    } catch (error) {
+        console.error('Erro na remoção:', error);
+        showToast('error', error.message || 'Erro de conexão com a API.');
+    }
+}
+
+async function removeTask(id) {
+    try {
+        const response = await fetch(`/deleteTask/${id}`, {
+            method: 'DELETE'
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.status === 'sucesso') {
+            showToast('info', data.mensagem);
+            setTimeout(() => {
+                location.reload();
+            }, 2000);
+
+
+        } else {
+            throw new Error(data.mensagem || 'Falha desconhecida ao remover a tarefa.');
+        }
+
+    } catch (error) {
+        console.error('Erro na remoção:', error);
+        showToast('error', error.message || 'Erro de conexão com a API.');
+    }
+}
+
+
+/**
+ * Mostra o modal de confirmação para remoção de usuário (usando SweetAlert2).
+ * Esta função deve chamar removeUser(id) se confirmada.
+ */
+function confirmRemoveUser(id) {
+    const user = users.find(u => u.id === id);
+
+    Swal.fire({
+        title: "Tem certeza?",
+        text: `Você realmente deseja remover o usuário ${user.nome}?`,
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#dc3545",
+        cancelButtonColor: "#6c757d",
+        confirmButtonText: "Sim, remover!",
+        cancelButtonText: "Cancelar"
+    }).then(result => {
+        if (result.isConfirmed) {
+            removeUser(id);
+        } else
+            showToast("info", "Operação cancela !")
+    });
+}
+
+function confirmRemoveTask(id) {
+    const task = tasks.find(t => t.id === id);
+
+    Swal.fire({
+        title: "Tem certeza?",
+        text: `Você realmente deseja remover a tarefa "${task.nome}"?`,
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#dc3545",
+        cancelButtonColor: "#6c757d",
+        confirmButtonText: "Sim, remover!",
+        cancelButtonText: "Cancelar"
+    }).then(result => {
+        if (result.isConfirmed) {
+            removeTask(id);
+        } else
+            showToast("info", "Operação cancela !")
+    });
+}
+
+
+/**
+ * Busca usuários na API do Flask, armazena globalmente e inicia a renderização.
+ * @param {string} searchTerm - O termo de busca opcional (nome).
+ */
+async function fetchAndRenderUsers(searchTerm = '') {
+    currentPage = 1; // Sempre volta para a primeira página em uma nova busca
+
+    let url = '/users';
+    if (searchTerm) {
+        // Usa a rota /searchUsers se você a implementou separadamente
+        url = `/searchUsers?nome=${encodeURIComponent(searchTerm)}`;
+    }
+    // NOTA: Se você usou a rota única '/searchUsers' que lida com o parâmetro opcional,
+    // a URL seria sempre: `/searchUsers?nome=${encodeURIComponent(searchTerm)}`
+
+    try {
+        const response = await fetch(url);
+
+        if (!response.ok) {
+            throw new Error(`Erro HTTP: ${response.status}`);
+        }
+
+        const usersData = await response.json();
+
+        // 1. Armazena a lista de usuários buscados
+        users = usersData;
+
+        // 2. Renderiza a lista e a paginação
+        renderUsers();
+
+    } catch (error) {
+        console.error('Erro ao buscar usuários:', error);
+        usersListContainer.innerHTML = '<p class="error-message">Não foi possível carregar os usuários.</p>';
+        showToast('error', 'Erro ao carregar lista de usuários!');
+    }
+}
+
+
+async function fetchAndRenderTasks(searchTerm = '') {
+    currentPage = 1; // Sempre volta para a primeira página em uma nova busca
+
+    let url = '/tasks';
+    if (searchTerm) {
+        // Usa a rota /searchUsers se você a implementou separadamente
+        url = `/searchUsers?nome=${encodeURIComponent(searchTerm)}`;
+    }
+    // NOTA: Se você usou a rota única '/searchUsers' que lida com o parâmetro opcional,
+    // a URL seria sempre: `/searchUsers?nome=${encodeURIComponent(searchTerm)}`
+
+    try {
+        const response = await fetch(url);
+
+        if (!response.ok) {
+            throw new Error(`Erro HTTP: ${response.status}`);
+        }
+
+        const usersData = await response.json();
+
+        // 1. Armazena a lista de usuários buscados
+        users = usersData;
+
+        // 2. Renderiza a lista e a paginação
+        renderUsers();
+
+    } catch (error) {
+        console.error('Erro ao buscar usuários:', error);
+        usersListContainer.innerHTML = '<p class="error-message">Não foi possível carregar os usuários.</p>';
+        showToast('error', 'Erro ao carregar lista de usuários!');
+    }
+}
+
+
+// Add CSS animations
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes slideIn {
+        from {
+            transform: translateX(400px);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+    
+    @keyframes slideOut {
+        from {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        to {
+            transform: translateX(400px);
+            opacity: 0;
+        }
+    });
+})`;
+
+
+// Inicializa o painel
+document.addEventListener('DOMContentLoaded', () => {
+    fetchUsers();
+    renderUsers();
+    fetchTasks();
+    renderTasks();
+});
+
+// Torna funções globais para serem usadas no onclick no HTML gerado
+window.confirmRemoveUser = confirmRemoveUser;
+window.confirmRemoveTask = confirmRemoveTask;
+
+
+
+
+
+
 
 
 
@@ -430,40 +459,87 @@ formAddUser.addEventListener("submit", function (e) {
         method: "POST",
         body: formData
     })
-    .then(response => {
-        return response.json().then(json => {
-            return { ok: response.ok, json };
+        .then(response => {
+            return response.json().then(json => {
+                return { ok: response.ok, json };
+            });
+        })
+        .then(result => {
+            const { ok, json } = result;
+
+            if (ok) {
+
+                if (typeof showToast === "function") {
+                    showToast("success", "Usuário adicionado com sucesso!");
+                }
+
+                if (json.redirect) {
+                    setTimeout(() => {
+                        window.location.href = json.redirect;
+                    }, 2000);
+                }
+
+                // limpar formulário
+                formAddUser.reset();
+            }
+
+            else {
+
+                if (typeof showToast === "function") {
+                    showToast("error", "Erro ao adicionar usuário!");
+                }
+            }
+        })
+        .catch(err => {
+            console.error("Erro:", err);
+            showToast("error", err);
         });
-    })
-    .then(result => {
-        const { ok, json } = result;
-
-        if (ok) {
-
-            if (typeof showToast === "function") {
-                showToast("success", "Usuário adicionado com sucesso!");
-            }
-
-            if (json.redirect) {
-                setTimeout(() => {
-                    window.location.href = json.redirect;
-                }, 2000);
-            }
-
-            // limpar formulário
-            formAddUser.reset();
-        }
-
-        else {
-
-            if (typeof showToast === "function") {
-                showToast("error", "Erro ao adicionar usuário!");
-            }
-        }
-    })
-    .catch(err => {
-        console.error("Erro:", err);
-        showToast("error", err);
-    });
 });
 
+
+
+formAddTasks.addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    const formData = new FormData(formAddTasks);
+
+    fetch(formAddTasks.action, {
+        method: "POST",
+        body: formData
+    })
+        .then(response => {
+            return response.json().then(json => {
+                return { ok: response.ok, json };
+            });
+        })
+        .then(result => {
+            const { ok, json } = result;
+
+            if (ok) {
+
+                if (typeof showToast === "function") {
+                    showToast("success", "Tarefa adicionada com sucesso");
+                }
+
+                if (json.redirect) {
+                    setTimeout(() => {
+                        window.location.href = json.redirect;
+                    }, 2000);
+                }
+
+                // limpar formulário
+                taskForm.reset();
+            }
+
+            else {
+
+                if (typeof showToast === "function") {
+                    showToast("error", "Erro ao adicionar Tarefa!");
+                }
+            }
+        })
+        .catch(err => {
+            console.error("Erro:", err);
+            showToast("error", err);
+        });
+});

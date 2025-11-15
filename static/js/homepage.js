@@ -48,7 +48,10 @@ const copiarChavePix = () => {
   if (!chavePixInput) return;
   if (navigator.clipboard && navigator.clipboard.writeText) {
     navigator.clipboard.writeText(chavePixInput.value).then(() => {
-      if (mensagemCopia) mensagemCopia.textContent = 'Chave PIX copiada com sucesso!';
+      if (mensagemCopia) {
+        mensagemCopia.textContent = 'Chave PIX copiada com sucesso!';
+        showToast("success", "Chave PIX copiada com sucesso !")
+      }
       setTimeout(() => {
         if (mensagemCopia) mensagemCopia.textContent = '';
       }, 3000);

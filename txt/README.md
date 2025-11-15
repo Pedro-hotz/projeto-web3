@@ -1,11 +1,12 @@
 # projeto-web3
 Projeto para criar e implementar em produção um site para uma Ong.
 
-# Baixar dependências 
+
+# Guia ========================================================
 
     run install => Instala as dependências do projeto 
 
-    run run => Roda o projeto 
+    run serve => Roda o projeto 
 
     run d-run => Cria a imagem para conectar no banco 
 

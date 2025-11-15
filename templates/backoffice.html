@@ -155,7 +155,7 @@
                     </svg>
                     Adicionar Nova Tarefa
                 </h2>
-                <form id="taskForm" class="form" action="/addTasks" method="POST">
+                <form id="formAddTasks" name="formAddTasks" class="form" action="/addTasks" method="POST">
                     <div class="form-group">
                         <label class="form-label">Título da Tarefa</label>
                         <input type="text" id="taskTitle" name="titulo" class="form-input" placeholder="Digite o título"
@@ -172,12 +172,14 @@
 
             <div class="tasks-container">
                 <div class="card tasks-card">
-                    <h2 class="card-title">Tarefas Pendentes</h2>
+                    <h2 class="card-title tasks"></h2>
                     <div id="tasksList" class="tasks-list"></div>
+                    <div id="paginationT" class="pagination"></div>
+
                 </div>
 
                 <div class="card tasks-card">
-                    <h2 class="card-title">Tarefas Concluídas</h2>
+                    <h2 class="card-title tasks">Tarefas Concluídas</h2>
                     <div id="completedTasksList" class="tasks-list"></div>
                 </div>
             </div>
@@ -203,7 +205,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="{{ url_for('static', filename='js/alert.service.js') }}"></script>
     <script src="{{ url_for('static', filename='js/backoffice.js') }}"></script>
-    
+
 </body>
 
 </html>

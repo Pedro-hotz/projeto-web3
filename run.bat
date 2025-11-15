@@ -7,7 +7,7 @@ IF /I "%1"=="install" (
     goto :EOF
 )
 
-IF /I "%1"=="run" (
+IF /I "%1"=="serve" (
     echo [SCRIPT]: Rodando aplicacao principal...
     python main.py
     goto :EOF
@@ -22,7 +22,7 @@ IF /I "%1"=="docker run" (
 :HELP
 echo.
 echo === Gerenciador de Scripts do Projeto ===
-echo USO: run {install^|run^|d-run}
+echo USO: run {install^|serve^|d-run}
 echo.
 
 :EOF

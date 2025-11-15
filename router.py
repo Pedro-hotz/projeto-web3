@@ -162,17 +162,60 @@ def getUsers():
 # TASKS =============================================
 @app.route('/tasks', methods=['GET'])
 def getTasks():
-    tasks = Task.query.all()
+    tasks = Task.query.filter(
+            Task.completa.is_(False)
+        ).all()
     lista = []
 
     for task in tasks:
         lista.append({
+            'id': task.id,
             'titulo': task.titulo,
             'descricao': task.descricao,
             'completa': task.completa
         })
 
     return jsonify(lista)
+
+@app.route('/tasks/c', methods=['GET'])
+def getTasksCompleta():
+
+    try:
+        tasks_completas = Task.query.filter(
+            Task.completa.is_(True)
+        ).all()
+
+        return jsonify([{
+            'id': task.id,
+            'titulo': task.titulo,
+            'descricao': task.descricao,
+            'completa': task.completa
+        } for task in tasks_completas])
+
+    except Exception as e:
+        return jsonify({
+            'status': 'erro', 
+            'mensagem': f'Falha ao buscar tarefas concluídas: {e}'
+        }), 500
+    
+
+
+@app.route('/deleteTask/<int:id>', methods=['DELETE'])
+def delete_task(id):
+    try:
+        task = Task.query.get(id)
+        if not task:
+            return jsonify({'status': 'erro', 'mensagem': 'Tarefa não encontrada.'}), 404
+
+        db.session.delete(task)
+        db.session.commit()
+
+        return jsonify({'status': 'sucesso', 'mensagem': 'Tarefa removida com sucesso.'})
+
+    except Exception as e:
+        return jsonify({'status': 'erro', 'mensagem': f'Erro ao remover tarefa: {e}'}), 500
+
+
 
 
 @app.route('/addTasks', methods=['POST'])
@@ -227,7 +270,7 @@ def enviarEmail():
                      
        try:
            mail.send(msg)
-           
+
            return redirect(url_for("home"))
        
        except Exception as e:
