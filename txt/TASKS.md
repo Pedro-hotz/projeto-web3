@@ -3,6 +3,8 @@
 
 ================================
 [ ] DAR UM JEITO NA SECRET_KEY
+
+[ ] DAR UM JEITO NA URL DE COPIA 
 ================================
 
 [ ] campo de busca para usuário 
@@ -13,9 +15,19 @@
 
 [ ] Relatório de tasks feitas
 
-[-] Como ajudar / compartilhar 
+[ ] Tratamento de erro do serviço de email
 
 
+
+
+
+
+
+
+
+
+
+[+] Como ajudar / compartilhar 
 
 [+] Tratamento de erro no login 
 

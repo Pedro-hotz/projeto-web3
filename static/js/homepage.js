@@ -39,9 +39,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
 });
 
-const btnCopiarPix = document.getElementById('btnCopiarPix');
+
 const chavePixInput = document.getElementById('chavePixInput');
 const mensagemCopia = document.getElementById('mensagemCopia');
+const btnCopiarPix = document.getElementById('btnCopiarPix');
 
 const copiarChavePix = () => {
   if (!chavePixInput) return;
@@ -79,6 +80,67 @@ else
 
 
 
+const urlInput = document.getElementById('urlInput'); // Opcional, se o valor de cópia for fixo
+const btnCopiarUrl = document.getElementById('btnCopiarUrl');
+// 1. Adicionado: Elemento para exibir o status da cópia
+const mensagemStatus = document.getElementById('mensagemStatus'); 
+
+const URL_TO_COPY = 'http://127.0.0.1:5000/';
+
+const copiarUrl = () => {
+    // Verificar se o elemento de feedback existe
+    const displayStatus = (mensagem) => {
+        if (mensagemStatus) {
+            mensagemStatus.textContent = mensagem;
+            setTimeout(() => {
+                mensagemStatus.textContent = '';
+            }, 3000);
+        }
+    };
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        // Método moderno (Recomendado)
+        navigator.clipboard.writeText(URL_TO_COPY).then(() => {
+            displayStatus('🔗 URL copiada com sucesso!');
+            showToast("success", "Ajude a nossa causa !")
+        }).catch(err => {
+            console.error('Falha ao usar navigator.clipboard.writeText', err);
+            fallbackCopy();
+        });
+    } else {
+        // Fallback antigo
+        fallbackCopy();
+    }
+
+    // Função de Fallback (usa o 'urlInput' temporariamente)
+    function fallbackCopy() {
+        if (!urlInput) {
+            displayStatus('Erro: Não foi possível copiar (Fallback indisponível).');
+            return;
+        }
+        
+        // CUIDADO: Este método exige que 'urlInput' seja um <textarea> ou <input>
+        const originalValue = urlInput.value;
+        urlInput.value = URL_TO_COPY; // Insere o valor fixo para a cópia
+        
+        try {
+            urlInput.select();
+            document.execCommand('copy');
+            showToast("sucess", "Ajude a nossa causa !")
+        } catch (err) {
+            console.error('Não foi possível copiar a URL', err);
+            displayStatus('Erro ao copiar URL');
+        } finally {
+            urlInput.value = originalValue;
+        }
+    }
+};
+
+if (btnCopiarUrl) {
+    btnCopiarUrl.addEventListener('click', copiarUrl);
+} else {
+    console.warn('btnCopiarUrl não encontrado (id="btnCopiarUrl")');
+}
 
 
 // Encontra o formulário de login pelo ID

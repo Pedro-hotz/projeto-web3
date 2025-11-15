@@ -227,6 +227,7 @@ def enviarEmail():
                      
        try:
            mail.send(msg)
+           
            return redirect(url_for("home"))
        
        except Exception as e:
