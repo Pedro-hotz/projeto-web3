@@ -5,9 +5,11 @@
 [ ] DAR UM JEITO NA SECRET_KEY
 ================================
 
-[-] Fazer backoffice 
+
 
 [ ] campo de busca para usuário 
+
+[ ] SMS ?
 
 [ ] Tratamento de erro no login 
 
@@ -19,6 +21,9 @@
 
 
 
+
+[+] Fazer backoffice
+ 
 [+] Ajustar o projeto para dar um comando e instalar todas as libs 
 
 [+] Serviço de email 
