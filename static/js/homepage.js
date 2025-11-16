@@ -105,7 +105,7 @@ const copiarUrl = () => {
         // Método moderno (Recomendado)
         navigator.clipboard.writeText(URL_TO_COPY).then(() => {
             displayStatus('🔗 URL copiada com sucesso!');
-            showToast("success", "Ajude a nossa causa !")
+            showToast("success", "Link copiado com SUCESSO !")
         }).catch(err => {
             console.error('Falha ao usar navigator.clipboard.writeText', err);
             fallbackCopy();
