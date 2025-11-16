@@ -24,7 +24,7 @@ def backoffice():
 #     return render_template("usuarios.html", nomeUsuario=nomeUsuario, idade=idade)
 
 
-# Exemplo de Rota (para testar)
+# rota de teste de conexão de banco
 @app.route('/teste_conexao')
 def teste_conexao():
     try:
@@ -43,7 +43,6 @@ def teste_conexao():
             return f'⚠️ **ERRO NA LEITURA.** A escrita parece ter funcionado, mas o registro lido é diferente.'
 
     except Exception as e:
-        # Se ocorrer qualquer erro (conexão, credenciais, etc.), ele será capturado aqui
         db.session.rollback() # Garante que a transação é desfeita em caso de erro
         return f'❌ **FALHA NA CONEXÃO OU OPERAÇÃO:** Verifique seu container Docker e suas credenciais. Erro: {e}'
     
@@ -59,21 +58,30 @@ def login():
             "status": "erro",
             "mensagem": "Por favor, preencha todos os campos."
         }), 400
+    
 
-    usuario = Usuario.query.filter_by(email=email, senha=senha).first()
+    usuario = Usuario.query.filter_by(email=email).first()
 
-    if usuario:
-        session['user_id'] = usuario.id
-        return jsonify({
-            "status": "sucesso",
-            "mensagem": "Login realizado com sucesso!",
-            "redirect": url_for("backoffice")
-        })
-    else:
+
+    if not usuario:
         return jsonify({
             "status": "erro",
-            "mensagem": "Credenciais inválidas. Tente novamente."
+            "mensagem": "E-mail não encontrado!"
+        }), 404
+
+    if usuario.senha != senha:
+        return jsonify({
+            "status": "erro",
+            "mensagem": "Senha incorreta!"
         }), 401
+
+
+    session['user_id'] = usuario.id
+    return jsonify({
+        "status": "sucesso",
+        "mensagem": "Login realizado com sucesso!",
+        "redirect": url_for("backoffice")
+    })
 # ==================================================
        
 
@@ -108,6 +116,8 @@ def addUser():
             "mensagem": f"Erro ao criar usuário: {str(e)}"
         }), 500
        
+
+
 @app.route('/searchUsers/<nome>', methods=['GET'])
 def searchUsers(nome):
    if request.method == 'GET':
@@ -129,6 +139,8 @@ def searchUsers(nome):
            return jsonify({'status': 'erro', 'mensagem': f'Falha ao buscar usuários: {e}'})
 
 
+
+
 @app.route('/deleteUser/<id>', methods=['DELETE'])
 def deleteUser(id):
     usuario = Usuario.query.get(id)
@@ -139,6 +151,9 @@ def deleteUser(id):
         return jsonify({'status': 'sucesso', 'mensagem': 'Usuário removido com sucesso.'})
     else:
         return jsonify({'status': 'erro', 'mensagem': 'Usuário não encontrado.'})
+
+
+
 
 
 @app.route('/users', methods=['GET'])  # Retorna a lista de TODOS usuários em formato JSON
@@ -156,6 +171,7 @@ def getUsers():
         })
 
     return jsonify(lista)
+
 # ==================================================
 
 
@@ -176,6 +192,9 @@ def getTasks():
         })
 
     return jsonify(lista)
+
+
+
 
 @app.route('/tasks/c', methods=['GET'])
 def getTasksCompleta():
@@ -198,12 +217,48 @@ def getTasksCompleta():
             'mensagem': f'Falha ao buscar tarefas concluídas: {e}'
         }), 500
     
+    
 
 
-@app.route('/deleteTask/<int:id>', methods=['DELETE'])
+@app.route('/tasks/converte/<id>', methods=['PUT'])
+def putConverte(id):
+    try:
+        task = Task.query.get(id)
+
+        if not task:
+            return jsonify({
+                "status": "erro",
+                "mensagem": "Tarefa não encontrada."
+            }), 404
+
+        # alterna o valor
+        task.completa = not task.completa  
+
+        db.session.commit()
+
+        return jsonify({
+            'status': 'sucesso',
+            'id': task.id,
+            'titulo': task.titulo,
+            'descricao': task.descricao,
+            'completa': task.completa
+        })
+
+    except Exception as e:
+        return jsonify({
+            'status': 'erro',
+            'mensagem': f'Falha ao atualizar tarefa: {e}'
+        }), 500
+
+
+
+
+
+@app.route('/deleteTask/<id>', methods=['DELETE'])
 def delete_task(id):
     try:
         task = Task.query.get(id)
+
         if not task:
             return jsonify({'status': 'erro', 'mensagem': 'Tarefa não encontrada.'}), 404
 
@@ -218,6 +273,40 @@ def delete_task(id):
 
 
 
+
+
+@app.route('/usuario/atualizar', methods=['PUT'])
+def atualizar_usuario():
+    data = request.get_json()
+
+    user_id = data.get("id")
+    novo_email = data.get("email")
+    nova_senha = data.get("senha")
+
+    user = Usuario.query.get(user_id)
+    if not user:
+        return jsonify({"mensagem": "Usuário não encontrado."}), 404
+
+    if novo_email:
+        user.email = novo_email
+
+    if nova_senha:
+        user.senha = nova_senha
+
+    try:
+        db.session.commit()
+        return jsonify({"mensagem": "Usuário atualizado com sucesso!"}), 200
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({
+            "mensagem": f"Erro ao atualizar usuário: {e}"
+        }), 500
+
+
+
+
+
 @app.route('/addTasks', methods=['POST'])
 def addTasks():
     titulo = request.form['titulo']
@@ -228,12 +317,16 @@ def addTasks():
         db.session.add(nova_tarefa)
         db.session.commit()
 
-        return render_template("backoffice.html")
+        return jsonify({
+            "status": "sucesso",
+            "mensagem": "Tarefa criada com sucesso!",
+        }), 200
 
     except Exception as e:
-        db.session.rollback()
-        flash(f"Erro ao adicionar tarefa: {e}", "error")
-        return redirect(url_for("backoffice"))
+        return jsonify({
+            "status": "erro",
+            "mensagem": f"Erro ao criar usuário: {str(e)}"
+        }), 500
 
 # ==============================================
 
@@ -241,38 +334,34 @@ def addTasks():
 #  ENVIAR EMAIL =============================================
 @app.route('/enviarEmail', methods=['POST'])
 def enviarEmail():
-   if request.method == 'POST': 
-       nome = request.form['nome']
-       email = request.form['email']
-       telefone = request.form['tel']
-       select = request.form['select']
-       mensagem = request.form['txt']
+    try:
+        nome = request.form.get('nome')
+        email = request.form.get('email')
+        telefone = request.form.get('tel')
+        select = request.form.get('select')
+        mensagem = request.form.get('txt')
 
-       meu_email_autenticado = os.getenv('MAIL_USERNAME')  # O remetente AUTENTICADO
+        meu_email_autenticado = os.getenv('MAIL_USERNAME')
 
-    
-    # Criação da Mensagem
-       msg = Message(
-       # 1. Subject: Identifica o remetente real e o destino
-        subject=f'Mensagem do Usuário: {nome}. Categoria: {select} <{email}>',
-        
-        # 2. Sender: Deve ser sua conta autenticada
-        sender=meu_email_autenticado,
-        
-        # 3. Recipients: O e-mail que recebe a mensagem (você)
-        recipients=[meu_email_autenticado], 
-        
-        # 4. Reply-To: Faz com que "Responder" vá direto para o usuário
-        reply_to=email,
+        # Cria a mensagem e quem vai receber  
+        msg = Message(
+            subject=f'Mensagem do Usuário: {nome}. Categoria: {select} <{email}>',
+            sender=meu_email_autenticado,
+            recipients=[meu_email_autenticado],
+            reply_to=email,
+            body=f'Nome: {nome}\nEmail: {email}\nTelefone: {telefone}\n\nMensagem:\n{mensagem}'
+        )
 
-        body=f'Nome: {nome}\nEmail de Contato: {email}\nTelefone: {telefone}\nMensagem:\n{mensagem}'
-    )
-                     
-       try:
-           mail.send(msg)
+        mail.send(msg)
 
-           return redirect(url_for("home"))
-       
-       except Exception as e:
-           return jsonify({'status': 'erro', 'mensagem': f'Falha ao enviar e-mail: {e}'})
+        return jsonify({
+            "status": "success",
+            "mensagem": "E-mail enviado com sucesso!"
+        }), 200
+
+    except Exception as e:
+        return jsonify({
+            "status": "error",
+            "mensagem": f"Falha ao enviar e-mail: {str(e)}"
+        }), 500
 # ==================================================

@@ -1,39 +1,38 @@
-// backoffice.js
-
-// Variáveis Globais (Corrigidas para refletir o uso da API e Paginação)
 let users = [];
 let tasks = [];
-const USERS_PER_PAGE = 3; // Constante para controle da paginação
+let tasksCom = [];
+const USERS_PER_PAGE = 3;
 let currentPage = 1;
 
-
-// DOM Elements
 const sidebar = document.getElementById('sidebar');
 const overlay = document.getElementById('overlay');
 const mobileMenuBtn = document.getElementById('mobileMenuBtn');
 const navButtons = document.querySelectorAll('.nav-button');
 const sections = document.querySelectorAll('.content-section');
 
-// User Form Elements
 const userForm = document.getElementById('userForm');
+
 const usersListContainer = document.getElementById('usersList');
 const paginationContainer = document.getElementById('pagination');
+
 const usersListTitle = document.getElementById('usersListTitle');
 
-// Task Form Elements
 const formAddTasks = document.getElementById('formAddTasks');
-const taskTitleInput = document.getElementById('taskTitle');
+
 const taskDescriptionInput = document.getElementById('taskDescription');
 const tasksList = document.getElementById('tasksList');
-const completedTasksList = document.getElementById('completedTasksList');
+const tasksListTitle = document.getElementById('tasksListTitle');
 
-// Modal Elements
-const confirmModal = document.getElementById('confirmModal');
+const completedTasksList = document.getElementById('completedTasksList');
+const tasksListTitleCom = document.getElementById('tasksListTitleCom');
+
+const confirmModal = document.getElementById('confirmModal')
+
 const cancelBtn = document.getElementById('cancelBtn');
 const confirmBtn = document.getElementById('confirmBtn');
+
 let pendingAction = null;
 
-// Mobile Menu Toggle
 mobileMenuBtn.addEventListener('click', () => {
     sidebar.classList.toggle('open');
     overlay.classList.toggle('active');
@@ -44,33 +43,30 @@ overlay.addEventListener('click', () => {
     overlay.classList.remove('active');
 });
 
-// Navigation
 navButtons.forEach(button => {
-
     button.addEventListener('click', () => {
-        const section = button.dataset.section;
 
-        // Update active button
+        const section = button.dataset.section;
+        
         navButtons.forEach(btn => btn.classList.remove('active'));
+
         button.classList.add('active');
 
-        // Update active section
         sections.forEach(sec => sec.classList.remove('active'));
+
         document.getElementById(`${section}Section`).classList.add('active');
 
-        // Close mobile menu
         sidebar.classList.remove('open');
+
         overlay.classList.remove('active');
 
     });
-
 });
 
 
 
-/**
- * Busca usuários na API do Flask e atualiza a lista global.
- */
+
+
 async function fetchUsers() {
     try {
         const response = await fetch("/users");
@@ -109,18 +105,47 @@ async function fetchTasks() {
         const data = await response.json();
 
         tasks = data.map(t => ({
+            'id': t.id,
             'titulo': t.titulo,
             'descricao': t.descricao,
             'completa': t.completa
         }));
 
-        usersListTitle.innerHTML = `<h2 class="card-title tasks">Tarefas Pendentes (${tasks.length})</h2>`;
+        tasksListTitle.innerHTML = `<h2 class="card-title">Tarefas pendentes (${tasks.length})</h2>`;
 
 
-        renderUsers();
+        renderTasks();
 
     } catch (error) {
-        usersListContainer.innerHTML = '<div class="empty-state">Erro ao carregar usuários.</div>';
+        tasksList.innerHTML = '<div class="empty-state">Erro ao carregar as tarefas.</div>';
+        console.error("Erro ao buscar tasks:", error);
+        showToast('error', 'Erro ao carregar tasks!');
+    }
+}
+
+async function fetchTasksCom() {
+    try {
+        const response = await fetch("/tasks/c");
+        if (!response.ok) {
+            throw new Error(`Erro HTTP: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        tasksCom = data.map(t => ({
+            'id': t.id,
+            'titulo': t.titulo,
+            'descricao': t.descricao,
+            'completa': t.completa
+        }));
+
+        tasksListTitleCom.innerHTML = `<h2 class="card-title">Tarefas concluída (${tasksCom.length})</h2>`;
+
+
+        renderTasksCom();
+
+    } catch (error) {
+        tasksListTitleCom.innerHTML = '<div class="empty-state">Erro ao carregar as tarefas.</div>';
         console.error("Erro ao buscar tasks:", error);
         showToast('error', 'Erro ao carregar tasks!');
     }
@@ -148,12 +173,15 @@ function renderUsers() {
             <div class="user-email">${user.email}</div>
             <span class="user-role">${getRoleName(user.tipo)}</span>
         </div>
-        <button class="btn btn-destructive" onclick="confirmRemoveUser(${user.id}, '${user.nome}')">Remover</button>
+        <div style="display: flex; gap: 10px;">
+        <button class="btn btn-destructive" onclick="confirmRemoveUser(${user.id})">Remover</button>
+        <button style="background-color: gray;" class="btn btn-destructive" onclick="confirmEditUser(${user.id})">Editar</button>
+        </div>
     </div>
   `).join('');
 
 
-    // cria bolinhas de paginação
+    // paginação
     const totalPages = Math.ceil(users.length / USERS_PER_PAGE);
     pagination.innerHTML = '';
 
@@ -181,24 +209,33 @@ function renderTasks() {
         return;
     }
 
-    const startIndex = (currentPage - 1) * USERS_PER_PAGE;
-    const endIndex = startIndex + USERS_PER_PAGE;
-    const paginatedUsers = tasks.slice(startIndex, endIndex);
 
-    tasksList.innerHTML = paginatedUsers.map(t => `
-    <div class="task-item">
-        <div class="task-info">
-            <div class="task-nome">${t.titulo}</div>
-            <div class="task-descricao">${t.descricao}</div>
-        </div>
-        <button class="btn btn-destructive" onclick="confirmRemoveTask(${t.id})">
+
+    const startIndex1 = (currentPage - 1) * USERS_PER_PAGE;
+    const endIndex1 = startIndex1 + USERS_PER_PAGE;
+    const paginatedUsers1 = tasks.slice(startIndex1, endIndex1);
+
+    tasksList.innerHTML = paginatedUsers1.map(t => `
+
+    <div class="user-item">
+        <div class="user-info" style="display: flex;
+                               justify-content: space-between;
+                               align-items: center;
+                               ">
+        <div>
+            <div class="user-name">${t.titulo}</div>
+            <div class="user-email">${t.descricao}</div>
+            </div>
+            <button class="btn btn-destructive tasks" onclick="concluirTask(${t.id})">
             Concluir
-        </button>
+            </button>
+        </div>
     </div>
 `).join('');
 
 
-    // cria bolinhas de paginação
+
+
     const totalPages = Math.ceil(tasks.length / USERS_PER_PAGE);
     pagination.innerHTML = '';
 
@@ -216,7 +253,88 @@ function renderTasks() {
     }
 }
 
+function renderTasksCom() {
+    const pagination = document.getElementById("paginationT2");
 
+    if (!tasksCom || tasksCom.length === 0) {
+        completedTasksList.innerHTML = '<div class="empty-state">Nenhuma tarefa cadastrada</div>';
+        pagination.innerHTML = '';
+        return;
+    }
+
+    const startIndex2 = (currentPage - 1) * USERS_PER_PAGE;
+    const endIndex2 = startIndex2 + USERS_PER_PAGE;
+    const paginatedUsers2 = tasksCom.slice(startIndex2, endIndex2);
+
+    completedTasksList.innerHTML = paginatedUsers2.map(t => `
+
+    <div class="user-item">
+        <div class="user-info" style="display: flex;
+                               justify-content: space-between;
+                               align-items: center;
+                               ">
+            <div>
+                <div class="user-name">${t.titulo}</div>
+                <div class="user-email">${t.descricao}</div>
+             </div>
+            <button class="btn btn-destructive" onclick="confirmRemoveTask(${t.id})">
+            Excluir
+            </button>
+        </div>
+    </div>
+`).join('');
+
+
+    const totalPages = Math.ceil(tasksCom.length / USERS_PER_PAGE);
+    pagination.innerHTML = '';
+
+    for (let i = 1; i <= totalPages; i++) {
+        const dot = document.createElement('div');
+        dot.classList.add('pagination-dot');
+        if (i === currentPage) dot.classList.add('active');
+
+        dot.addEventListener('click', () => {
+            currentPage = i;
+            renderTasksCom();
+        });
+
+        pagination.appendChild(dot);
+    }
+}
+
+
+async function UpdateUser(id, novoEmail = null, novaSenha = null) {
+     try {
+        const response = await fetch("/usuario/atualizar", {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                id: id,
+                email: novoEmail || null,
+                senha: novaSenha || null
+            })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            showToast("error", data.mensagem || "Erro ao atualizar.");
+            return;
+        }
+
+        showToast("success", data.mensagem);
+
+        if (typeof fetchUsers === "function") {
+            fetchUsers();
+        }
+
+    } catch (err) {
+        console.error("Erro ao atualizar usuário:", err);
+        showToast("error", "Erro interno ao atualizar usuário.");
+    }
+}
 
 
 /**
@@ -308,11 +426,13 @@ function confirmRemoveUser(id) {
 }
 
 function confirmRemoveTask(id) {
-    const task = tasks.find(t => t.id === id);
+    const task = tasksCom.find(t => t.id === id);
+
+    console.log(task)
 
     Swal.fire({
         title: "Tem certeza?",
-        text: `Você realmente deseja remover a tarefa "${task.nome}"?`,
+        text: ` Já concluiram a tarefa "${task.titulo}"?`,
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#dc3545",
@@ -327,21 +447,89 @@ function confirmRemoveTask(id) {
     });
 }
 
+function confirmEditUser(id) {
+    const user = users.find(u => u.id === id);
+
+    console.log(user)
+
+    Swal.fire({
+        title: "Tem certeza?",
+        text: `Você realmente deseja editar o usuário ${user.nome}?`,
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "rgb(0, 128, 0)",
+        cancelButtonColor: "#6c757d",
+        confirmButtonText: "Sim, Editar!",
+        cancelButtonText: "Cancelar"
+    }).then(result => {
+        if (result.isConfirmed) {
+            editUser(id);
+        } else
+            showToast("info", "Operação cancela !")
+    });
+}
+
+function editUser(id) {
+    const user = users.find(u => u.id === id);
+
+    Swal.fire({
+        title: `Editar usuário`,
+        html: `
+            <p><strong>${user.nome}</strong></p>
+
+            <input id="newEmail" class="swal2-input" placeholder="Novo e-mail (opcional)" value="${user.email}">
+            <input id="newSenha" type="password" class="swal2-input" placeholder="Nova senha (opcional)">
+        `,
+        showCancelButton: true,
+        confirmButtonText: "Salvar",
+        cancelButtonText: "Cancelar",
+        preConfirm: () => {
+            const email = document.getElementById("newEmail").value.trim();
+            const senha = document.getElementById("newSenha").value.trim();
+
+            if (!email && !senha) {
+                Swal.showValidationMessage("Digite pelo menos um campo para atualizar.");
+                return false;
+            }
+
+            return { email, senha };
+        }
+    }).then(result => {
+        if (result.isConfirmed) {
+            UpdateUser(id, result.value.email, result.value.senha);
+        }
+    });
+}
+
+async function concluirTask(id) {
+    const response = await fetch(`/tasks/converte/${id}`, {
+        method: 'PUT'
+    });
+
+    const data = await response.json();
+
+    if (data.status === 'sucesso') {
+        showToast("success", "Tarefa atualizada!");
+        setTimeout(() => {
+            location.reload();
+        }, 2000);
+    } else {
+        showToast("error", data.mensagem);
+    }
+}
+
 
 /**
  * Busca usuários na API do Flask, armazena globalmente e inicia a renderização.
  * @param {string} searchTerm - O termo de busca opcional (nome).
  */
 async function fetchAndRenderUsers(searchTerm = '') {
-    currentPage = 1; // Sempre volta para a primeira página em uma nova busca
+    currentPage = 1;
 
     let url = '/users';
     if (searchTerm) {
-        // Usa a rota /searchUsers se você a implementou separadamente
         url = `/searchUsers?nome=${encodeURIComponent(searchTerm)}`;
     }
-    // NOTA: Se você usou a rota única '/searchUsers' que lida com o parâmetro opcional,
-    // a URL seria sempre: `/searchUsers?nome=${encodeURIComponent(searchTerm)}`
 
     try {
         const response = await fetch(url);
@@ -352,10 +540,9 @@ async function fetchAndRenderUsers(searchTerm = '') {
 
         const usersData = await response.json();
 
-        // 1. Armazena a lista de usuários buscados
         users = usersData;
 
-        // 2. Renderiza a lista e a paginação
+        // refresh
         renderUsers();
 
     } catch (error) {
@@ -366,41 +553,7 @@ async function fetchAndRenderUsers(searchTerm = '') {
 }
 
 
-async function fetchAndRenderTasks(searchTerm = '') {
-    currentPage = 1; // Sempre volta para a primeira página em uma nova busca
-
-    let url = '/tasks';
-    if (searchTerm) {
-        // Usa a rota /searchUsers se você a implementou separadamente
-        url = `/searchUsers?nome=${encodeURIComponent(searchTerm)}`;
-    }
-    // NOTA: Se você usou a rota única '/searchUsers' que lida com o parâmetro opcional,
-    // a URL seria sempre: `/searchUsers?nome=${encodeURIComponent(searchTerm)}`
-
-    try {
-        const response = await fetch(url);
-
-        if (!response.ok) {
-            throw new Error(`Erro HTTP: ${response.status}`);
-        }
-
-        const usersData = await response.json();
-
-        // 1. Armazena a lista de usuários buscados
-        users = usersData;
-
-        // 2. Renderiza a lista e a paginação
-        renderUsers();
-
-    } catch (error) {
-        console.error('Erro ao buscar usuários:', error);
-        usersListContainer.innerHTML = '<p class="error-message">Não foi possível carregar os usuários.</p>';
-        showToast('error', 'Erro ao carregar lista de usuários!');
-    }
-}
-
-
-// Add CSS animations
+// animação
 const style = document.createElement('style');
 style.textContent = `
     @keyframes slideIn {
@@ -427,18 +580,22 @@ style.textContent = `
 })`;
 
 
+
+
 // Inicializa o painel
 document.addEventListener('DOMContentLoaded', () => {
     fetchUsers();
     renderUsers();
     fetchTasks();
     renderTasks();
+    fetchTasksCom();
+    renderTasksCom();
 });
+
 
 // Torna funções globais para serem usadas no onclick no HTML gerado
 window.confirmRemoveUser = confirmRemoveUser;
 window.confirmRemoveTask = confirmRemoveTask;
-
 
 
 
@@ -479,8 +636,7 @@ formAddUser.addEventListener("submit", function (e) {
                     }, 2000);
                 }
 
-                // limpar formulário
-                formAddUser.reset();
+                formAddUser.reset(); // limpar formulário
             }
 
             else {
@@ -519,20 +675,14 @@ formAddTasks.addEventListener("submit", function (e) {
 
                 if (typeof showToast === "function") {
                     showToast("success", "Tarefa adicionada com sucesso");
-                }
-
-                if (json.redirect) {
                     setTimeout(() => {
-                        window.location.href = json.redirect;
+                        location.reload();
                     }, 2000);
                 }
-
-                // limpar formulário
-                taskForm.reset();
+                formAddTasks.reset();
             }
 
             else {
-
                 if (typeof showToast === "function") {
                     showToast("error", "Erro ao adicionar Tarefa!");
                 }

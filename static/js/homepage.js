@@ -105,7 +105,7 @@ const copiarUrl = () => {
         // Método moderno (Recomendado)
         navigator.clipboard.writeText(URL_TO_COPY).then(() => {
             displayStatus('🔗 URL copiada com sucesso!');
-            showToast("success", "Ajude a nossa causa !")
+            showToast("success", "Link copiado com SUCESSO !")
         }).catch(err => {
             console.error('Falha ao usar navigator.clipboard.writeText', err);
             fallbackCopy();
@@ -150,45 +150,68 @@ if (btnCopiarUrl) {
 const formLogin = document.getElementById('formLogin');
 
 formLogin.addEventListener('submit', function(e) {
-    // 1. Impede a submissão padrão do formulário
-    e.preventDefault(); 
+    e.preventDefault();
 
-    // 2. Coleta os dados do formulário como FormData
     const formData = new FormData(formLogin);
-    
-    // 3. Envia os dados via fetch
+
     fetch(formLogin.action, {
         method: 'POST',
-        // CRUCIAL: NÃO defina o Content-Type. 
-        // O fetch o define automaticamente como 'multipart/form-data' 
-        // quando você passa um objeto FormData, o que é o formato que o Flask espera.
         body: formData 
     })
     .then(response => {
-        // Trata a resposta:
-        if (response.ok) { 
-            return response.json(); 
-        } else {
-            // Se houver erro HTTP (400, 401, 500), processa o JSON de erro do Flask
-            return response.json().then(error => {
-                throw new Error(error.mensagem || 'Erro desconhecido.');
-            });
-        }
+        return response.json().then(data => {
+            if (!response.ok) throw new Error(data.mensagem);
+            return data;
+        });
     })
     .then(data => {
         if (data.status === 'sucesso' && data.redirect) {
-            window.location.href = data.redirect; 
-        } 
+            window.location.href = data.redirect;
+        }
     })
     .catch(error => {
-        // Falha (Exibe Toast de Erro)
         console.error('Login Failed:', error.message);
 
-        // Assumindo que showToast e Swal estão definidos:
         if (typeof showToast === 'function') {
-            showToast("error", "Erro ao fazer login!");
+            showToast("error", error.message);
         }
 
         document.getElementById('senhaLogin').value = '';
     });
 });
+
+
+
+
+
+async function enviarLead(event) {
+    event.preventDefault(); // impede reload
+
+    const form = document.getElementById("formLead");
+    const formData = new FormData(form);
+
+    try {
+        const response = await fetch("/enviarEmail", {
+            method: "POST",
+            body: formData
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            showToast("success", data.mensagem);
+            form.reset();
+
+            // fecha o modal automaticamente
+            const modal = document.querySelector('[data-modal="lead"]');
+            if (modal) modal.classList.remove("ativo");
+
+        } else {
+            showToast("error", data.mensagem);
+        }
+
+    } catch (error) {
+        console.error("Erro ao enviar:", error);
+        showToast("error", "Erro inesperado ao enviar. Tente novamente.");
+    }
+}

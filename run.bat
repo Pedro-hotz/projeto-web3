@@ -13,7 +13,7 @@ IF /I "%1"=="serve" (
     goto :EOF
 )
 
-IF /I "%1"=="docker run" (
+IF /I "%1"=="dock" (
     echo [SCRIPT]: Inicializando container Docker...
     docker run --name ong -e POSTGRES_USER=appuser -e POSTGRES_PASSWORD=minhasenha -e POSTGRES_DB=projeto_faculdade -p 5432:5432 -d postgres
     goto :EOF
@@ -22,7 +22,7 @@ IF /I "%1"=="docker run" (
 :HELP
 echo.
 echo === Gerenciador de Scripts do Projeto ===
-echo USO: run {install^|serve^|d-run}
+echo USO: run {install^|serve^|docker run}
 echo.
 
 :EOF
