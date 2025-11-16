@@ -60,20 +60,29 @@ def login():
             "mensagem": "Por favor, preencha todos os campos."
         }), 400
 
-    usuario = Usuario.query.filter_by(email=email, senha=senha).first()
+    # Procura o email primeiro
+    usuario = Usuario.query.filter_by(email=email).first()
 
-    if usuario:
-        session['user_id'] = usuario.id
-        return jsonify({
-            "status": "sucesso",
-            "mensagem": "Login realizado com sucesso!",
-            "redirect": url_for("backoffice")
-        })
-    else:
+    if not usuario:
         return jsonify({
             "status": "erro",
-            "mensagem": "Credenciais inválidas. Tente novamente."
+            "mensagem": "E-mail não encontrado!"
+        }), 404
+
+    # Verifica a senha
+    if usuario.senha != senha:
+        return jsonify({
+            "status": "erro",
+            "mensagem": "Senha incorreta!"
         }), 401
+
+    # Login OK
+    session['user_id'] = usuario.id
+    return jsonify({
+        "status": "sucesso",
+        "mensagem": "Login realizado com sucesso!",
+        "redirect": url_for("backoffice")
+    })
 # ==================================================
        
 
@@ -198,12 +207,46 @@ def getTasksCompleta():
             'mensagem': f'Falha ao buscar tarefas concluídas: {e}'
         }), 500
     
+    
 
 
-@app.route('/deleteTask/<int:id>', methods=['DELETE'])
+@app.route('/tasks/converte/<id>', methods=['PUT'])
+def putConverte(id):
+    try:
+        task = Task.query.get(id)
+
+        if not task:
+            return jsonify({
+                "status": "erro",
+                "mensagem": "Tarefa não encontrada."
+            }), 404
+
+        # alterna o valor
+        task.completa = not task.completa  
+
+        db.session.commit()
+
+        return jsonify({
+            'status': 'sucesso',
+            'id': task.id,
+            'titulo': task.titulo,
+            'descricao': task.descricao,
+            'completa': task.completa
+        })
+
+    except Exception as e:
+        return jsonify({
+            'status': 'erro',
+            'mensagem': f'Falha ao atualizar tarefa: {e}'
+        }), 500
+
+
+
+@app.route('/deleteTask/<id>', methods=['DELETE'])
 def delete_task(id):
     try:
         task = Task.query.get(id)
+
         if not task:
             return jsonify({'status': 'erro', 'mensagem': 'Tarefa não encontrada.'}), 404
 
@@ -228,12 +271,16 @@ def addTasks():
         db.session.add(nova_tarefa)
         db.session.commit()
 
-        return render_template("backoffice.html")
+        return jsonify({
+            "status": "sucesso",
+            "mensagem": "Tarefa criada com sucesso!",
+        }), 200
 
     except Exception as e:
-        db.session.rollback()
-        flash(f"Erro ao adicionar tarefa: {e}", "error")
-        return redirect(url_for("backoffice"))
+        return jsonify({
+            "status": "erro",
+            "mensagem": f"Erro ao criar usuário: {str(e)}"
+        }), 500
 
 # ==============================================
 

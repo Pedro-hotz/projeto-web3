@@ -4,6 +4,11 @@ Projeto para criar e implementar em produção um site para uma Ong.
 
 # Guia ========================================================
 
+    1º -> Você vai no terminal do vscode e abre no terminal "CMD" ou "Command prompt"
+    2º -> Vai rodar o comando "run install" para instalar tudo o que precisa para rodar o projeto.
+    3º -> È necessário criar uma imagem no docker, então rode "run dock"
+    4º -> Para finalmente rodar, digite o comando "run serve" ai vai rodar local.
+
     run install => Instala as dependências do projeto 
 
     run serve => Roda o projeto 

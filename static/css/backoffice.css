@@ -257,6 +257,11 @@ button.btn.btn-primary {
     color: white;
 }
 
+.btn-destructive.tasks{
+    background-color: green;
+    color: white;
+}
+
 .btn-destructive:hover {
     opacity: 0.9;
 }

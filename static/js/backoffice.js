@@ -3,6 +3,7 @@
 // Variáveis Globais (Corrigidas para refletir o uso da API e Paginação)
 let users = [];
 let tasks = [];
+let tasksCom = [];
 const USERS_PER_PAGE = 3; // Constante para controle da paginação
 let currentPage = 1;
 
@@ -22,10 +23,12 @@ const usersListTitle = document.getElementById('usersListTitle');
 
 // Task Form Elements
 const formAddTasks = document.getElementById('formAddTasks');
-const taskTitleInput = document.getElementById('taskTitle');
 const taskDescriptionInput = document.getElementById('taskDescription');
 const tasksList = document.getElementById('tasksList');
+const tasksListTitle = document.getElementById('tasksListTitle');
+
 const completedTasksList = document.getElementById('completedTasksList');
+const tasksListTitleCom = document.getElementById('tasksListTitleCom');
 
 // Modal Elements
 const confirmModal = document.getElementById('confirmModal');
@@ -109,18 +112,47 @@ async function fetchTasks() {
         const data = await response.json();
 
         tasks = data.map(t => ({
+            'id': t.id,
             'titulo': t.titulo,
             'descricao': t.descricao,
             'completa': t.completa
         }));
 
-        usersListTitle.innerHTML = `<h2 class="card-title tasks">Tarefas Pendentes (${tasks.length})</h2>`;
+        tasksListTitle.innerHTML = `<h2 class="card-title">Tarefas pendentes (${tasks.length})</h2>`;
 
 
-        renderUsers();
+        renderTasks();
 
     } catch (error) {
-        usersListContainer.innerHTML = '<div class="empty-state">Erro ao carregar usuários.</div>';
+        tasksList.innerHTML = '<div class="empty-state">Erro ao carregar as tarefas.</div>';
+        console.error("Erro ao buscar tasks:", error);
+        showToast('error', 'Erro ao carregar tasks!');
+    }
+}
+
+async function fetchTasksCom() {
+    try {
+        const response = await fetch("/tasks/c");
+        if (!response.ok) {
+            throw new Error(`Erro HTTP: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        tasksCom = data.map(t => ({
+            'id': t.id,
+            'titulo': t.titulo,
+            'descricao': t.descricao,
+            'completa': t.completa
+        }));
+
+        tasksListTitleCom.innerHTML = `<h2 class="card-title">Tarefas concluída (${tasksCom.length})</h2>`;
+
+
+        renderTasksCom();
+
+    } catch (error) {
+        tasksListTitleCom.innerHTML = '<div class="empty-state">Erro ao carregar as tarefas.</div>';
         console.error("Erro ao buscar tasks:", error);
         showToast('error', 'Erro ao carregar tasks!');
     }
@@ -148,7 +180,7 @@ function renderUsers() {
             <div class="user-email">${user.email}</div>
             <span class="user-role">${getRoleName(user.tipo)}</span>
         </div>
-        <button class="btn btn-destructive" onclick="confirmRemoveUser(${user.id}, '${user.nome}')">Remover</button>
+        <button class="btn btn-destructive" onclick="confirmRemoveUser(${user.id})">Remover</button>
     </div>
   `).join('');
 
@@ -181,19 +213,27 @@ function renderTasks() {
         return;
     }
 
-    const startIndex = (currentPage - 1) * USERS_PER_PAGE;
-    const endIndex = startIndex + USERS_PER_PAGE;
-    const paginatedUsers = tasks.slice(startIndex, endIndex);
 
-    tasksList.innerHTML = paginatedUsers.map(t => `
-    <div class="task-item">
-        <div class="task-info">
-            <div class="task-nome">${t.titulo}</div>
-            <div class="task-descricao">${t.descricao}</div>
-        </div>
-        <button class="btn btn-destructive" onclick="confirmRemoveTask(${t.id})">
+
+    const startIndex1 = (currentPage - 1) * USERS_PER_PAGE;
+    const endIndex1 = startIndex1 + USERS_PER_PAGE;
+    const paginatedUsers1 = tasks.slice(startIndex1, endIndex1);
+
+    tasksList.innerHTML = paginatedUsers1.map(t => `
+
+    <div class="user-item">
+        <div class="user-info" style="display: flex;
+                               justify-content: space-between;
+                               align-items: center;
+                               ">
+        <div>
+            <div class="user-name">${t.titulo}</div>
+            <div class="user-email">${t.descricao}</div>
+            </div>
+            <button class="btn btn-destructive tasks" onclick="concluirTask(${t.id})">
             Concluir
-        </button>
+            </button>
+        </div>
     </div>
 `).join('');
 
@@ -210,6 +250,56 @@ function renderTasks() {
         dot.addEventListener('click', () => {
             currentPage = i;
             renderTasks();
+        });
+
+        pagination.appendChild(dot);
+    }
+}
+
+function renderTasksCom() {
+    const pagination = document.getElementById("paginationT2");
+
+    if (!tasksCom || tasksCom.length === 0) {
+        completedTasksList.innerHTML = '<div class="empty-state">Nenhuma tarefa cadastrada</div>';
+        pagination.innerHTML = '';
+        return;
+    }
+
+    const startIndex2 = (currentPage - 1) * USERS_PER_PAGE;
+    const endIndex2 = startIndex2 + USERS_PER_PAGE;
+    const paginatedUsers2 = tasksCom.slice(startIndex2, endIndex2);
+
+    completedTasksList.innerHTML = paginatedUsers2.map(t => `
+
+    <div class="user-item">
+        <div class="user-info" style="display: flex;
+                               justify-content: space-between;
+                               align-items: center;
+                               ">
+            <div>
+                <div class="user-name">${t.titulo}</div>
+                <div class="user-email">${t.descricao}</div>
+             </div>
+            <button class="btn btn-destructive" onclick="confirmRemoveTask(${t.id})">
+            Excluir
+            </button>
+        </div>
+    </div>
+`).join('');
+
+
+    // cria bolinhas de paginação
+    const totalPages = Math.ceil(tasksCom.length / USERS_PER_PAGE);
+    pagination.innerHTML = '';
+
+    for (let i = 1; i <= totalPages; i++) {
+        const dot = document.createElement('div');
+        dot.classList.add('pagination-dot');
+        if (i === currentPage) dot.classList.add('active');
+
+        dot.addEventListener('click', () => {
+            currentPage = i;
+            renderTasksCom();
         });
 
         pagination.appendChild(dot);
@@ -308,11 +398,13 @@ function confirmRemoveUser(id) {
 }
 
 function confirmRemoveTask(id) {
-    const task = tasks.find(t => t.id === id);
+    const task = tasksCom.find(t => t.id === id);
+
+    console.log(task)
 
     Swal.fire({
         title: "Tem certeza?",
-        text: `Você realmente deseja remover a tarefa "${task.nome}"?`,
+        text: ` Já concluiram a tarefa "${task.titulo}"?`,
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#dc3545",
@@ -325,6 +417,24 @@ function confirmRemoveTask(id) {
         } else
             showToast("info", "Operação cancela !")
     });
+}
+
+
+async function concluirTask(id) {
+    const response = await fetch(`/tasks/converte/${id}`, {
+        method: 'PUT'
+    });
+
+    const data = await response.json();
+
+    if (data.status === 'sucesso') {
+        showToast("success", "Tarefa atualizada!");
+        setTimeout(() => {
+            location.reload();
+        }, 2000);
+    } else {
+        showToast("error", data.mensagem);
+    }
 }
 
 
@@ -366,38 +476,6 @@ async function fetchAndRenderUsers(searchTerm = '') {
 }
 
 
-async function fetchAndRenderTasks(searchTerm = '') {
-    currentPage = 1; // Sempre volta para a primeira página em uma nova busca
-
-    let url = '/tasks';
-    if (searchTerm) {
-        // Usa a rota /searchUsers se você a implementou separadamente
-        url = `/searchUsers?nome=${encodeURIComponent(searchTerm)}`;
-    }
-    // NOTA: Se você usou a rota única '/searchUsers' que lida com o parâmetro opcional,
-    // a URL seria sempre: `/searchUsers?nome=${encodeURIComponent(searchTerm)}`
-
-    try {
-        const response = await fetch(url);
-
-        if (!response.ok) {
-            throw new Error(`Erro HTTP: ${response.status}`);
-        }
-
-        const usersData = await response.json();
-
-        // 1. Armazena a lista de usuários buscados
-        users = usersData;
-
-        // 2. Renderiza a lista e a paginação
-        renderUsers();
-
-    } catch (error) {
-        console.error('Erro ao buscar usuários:', error);
-        usersListContainer.innerHTML = '<p class="error-message">Não foi possível carregar os usuários.</p>';
-        showToast('error', 'Erro ao carregar lista de usuários!');
-    }
-}
 
 
 // Add CSS animations
@@ -433,7 +511,10 @@ document.addEventListener('DOMContentLoaded', () => {
     renderUsers();
     fetchTasks();
     renderTasks();
+    fetchTasksCom();
+    renderTasksCom();
 });
+
 
 // Torna funções globais para serem usadas no onclick no HTML gerado
 window.confirmRemoveUser = confirmRemoveUser;
@@ -519,20 +600,14 @@ formAddTasks.addEventListener("submit", function (e) {
 
                 if (typeof showToast === "function") {
                     showToast("success", "Tarefa adicionada com sucesso");
-                }
-
-                if (json.redirect) {
                     setTimeout(() => {
-                        window.location.href = json.redirect;
+                        location.reload();
                     }, 2000);
                 }
-
-                // limpar formulário
-                taskForm.reset();
+                formAddTasks.reset();
             }
 
             else {
-
                 if (typeof showToast === "function") {
                     showToast("error", "Erro ao adicionar Tarefa!");
                 }

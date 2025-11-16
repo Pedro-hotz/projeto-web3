@@ -13,14 +13,7 @@
 
 [ ] Ver sobre responsividade 
 
-[+] Relatório de tasks feitas
-
 [ ] Tratamento de erro do serviço de email
-
-
-
-
-
 
 
 
