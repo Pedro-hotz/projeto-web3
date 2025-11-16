@@ -63,7 +63,6 @@ body {
   font-size: 1.5rem;
   font-weight: bold;
   text-decoration: none;
-  background: linear-gradient(to right, var(--primary), var(--secondary));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -82,7 +81,7 @@ body {
 }
 
 .nav a:hover {
-  color: var(--primary);
+  color: var(--foreground);
 }
 
 .btn {
@@ -96,23 +95,24 @@ body {
   transition: all 0.3s;
 }
 
-.btn-action {
+.btn.btn-action {
   background: var(--action);
-  color: white;
+  color: rgb(255, 255, 255);
 }
 
 .btn-action:hover {
   background: hsl(25, 95%, 45%);
-  color: white !important;
+  color: rgb(0, 0, 0);
 }
 
 .btn-action.login {
   background: hsl(202, 100%, 50%);
+  color: white;
 }
 
 .btn-action.login:hover {
   background: hsl(202, 100%, 43%);
-  color: white;
+  color: rgb(0, 0, 0);
 }
 
 .btn-hero {
@@ -222,7 +222,7 @@ body {
 .section-divider {
   width: 6rem;
   height: 4px;
-  background: linear-gradient(to right, var(--primary), var(--secondary));
+  background: var(--secondary);
   margin: 0 auto 1.5rem;
 }
 
@@ -251,6 +251,7 @@ body {
 .card {
   background: white;
   border-radius: 1rem;
+  text-align: center;
   padding: 2rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   transition: all 0.3s;
@@ -264,7 +265,6 @@ body {
 .card-icon {
   width: 4rem;
   height: 4rem;
-  background:linear-gradient(135deg, var(--action), hsl(25, 95%, 65%));
   border-radius: 1rem;
   display: flex;
   align-items: center;
@@ -272,6 +272,7 @@ body {
   margin-bottom: 1.5rem;
   color: white;
   font-size: 2rem;
+  margin: 0 auto 1.5rem auto;
 }
 
 .card h3 {
@@ -352,7 +353,7 @@ body {
 
 /* CTA Section */
 .cta-section {
-  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  background: var(--foreground);
   border-radius: 1.5rem;
   padding: 3rem 2rem;
   text-align: center;
