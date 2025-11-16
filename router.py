@@ -334,38 +334,34 @@ def addTasks():
 #  ENVIAR EMAIL =============================================
 @app.route('/enviarEmail', methods=['POST'])
 def enviarEmail():
-   if request.method == 'POST': 
-       nome = request.form['nome']
-       email = request.form['email']
-       telefone = request.form['tel']
-       select = request.form['select']
-       mensagem = request.form['txt']
+    try:
+        nome = request.form.get('nome')
+        email = request.form.get('email')
+        telefone = request.form.get('tel')
+        select = request.form.get('select')
+        mensagem = request.form.get('txt')
 
-       meu_email_autenticado = os.getenv('MAIL_USERNAME')  # O remetente
+        meu_email_autenticado = os.getenv('MAIL_USERNAME')
 
-    
-    # Criação da Mensagem
-       msg = Message(
-       # 1. Subject: Identifica o remetente real e o destino
-        subject=f'Mensagem do Usuário: {nome}. Categoria: {select} <{email}>',
-        
-        # 2. Sender: Deve ser sua conta autenticada
-        sender=meu_email_autenticado,
-        
-        # 3. Recipients: O e-mail que recebe a mensagem (você)
-        recipients=[meu_email_autenticado], 
-        
-        # 4. Reply-To: Faz com que "Responder" vá direto para o usuário
-        reply_to=email,
+        # Cria a mensagem e quem vai receber  
+        msg = Message(
+            subject=f'Mensagem do Usuário: {nome}. Categoria: {select} <{email}>',
+            sender=meu_email_autenticado,
+            recipients=[meu_email_autenticado],
+            reply_to=email,
+            body=f'Nome: {nome}\nEmail: {email}\nTelefone: {telefone}\n\nMensagem:\n{mensagem}'
+        )
 
-        body=f'Nome: {nome}\nEmail de Contato: {email}\nTelefone: {telefone}\nMensagem:\n{mensagem}'
-    )
-                     
-       try:
-           mail.send(msg)
+        mail.send(msg)
 
-           return redirect(url_for("home"))
-       
-       except Exception as e:
-           return jsonify({'status': 'erro', 'mensagem': f'Falha ao enviar e-mail: {e}'})
+        return jsonify({
+            "status": "success",
+            "mensagem": "E-mail enviado com sucesso!"
+        }), 200
+
+    except Exception as e:
+        return jsonify({
+            "status": "error",
+            "mensagem": f"Falha ao enviar e-mail: {str(e)}"
+        }), 500
 # ==================================================

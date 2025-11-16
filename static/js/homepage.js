@@ -179,3 +179,39 @@ formLogin.addEventListener('submit', function(e) {
         document.getElementById('senhaLogin').value = '';
     });
 });
+
+
+
+
+
+async function enviarLead(event) {
+    event.preventDefault(); // impede reload
+
+    const form = document.getElementById("formLead");
+    const formData = new FormData(form);
+
+    try {
+        const response = await fetch("/enviarEmail", {
+            method: "POST",
+            body: formData
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            showToast("success", data.mensagem);
+            form.reset();
+
+            // fecha o modal automaticamente
+            const modal = document.querySelector('[data-modal="lead"]');
+            if (modal) modal.classList.remove("ativo");
+
+        } else {
+            showToast("error", data.mensagem);
+        }
+
+    } catch (error) {
+        console.error("Erro ao enviar:", error);
+        showToast("error", "Erro inesperado ao enviar. Tente novamente.");
+    }
+}
