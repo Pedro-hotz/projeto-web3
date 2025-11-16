@@ -7,32 +7,7 @@
 [ ] DAR UM JEITO NA URL DE COPIA 
 ================================
 
-[ ] campo de busca para usuário 
-
-[ ] SMS ?
-
-[ ] Ver sobre responsividade 
-
 [ ] Tratamento de erro do serviço de email
-
-
-
-
-
-
-[+] Como ajudar / compartilhar 
-
-[+] Tratamento de erro no login 
-
-[+] Fazer backoffice
- 
-[+] Ajustar o projeto para dar um comando e instalar todas as libs 
-
-[+] Serviço de email 
-
-[+] Conectar com o banco de dados
-
-[+] Rodar banco local 
 
 
 # =======================================================
