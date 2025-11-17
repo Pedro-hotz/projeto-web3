@@ -585,6 +585,8 @@ body {
   border-radius: 5px;
 }
 
+
+
 /* ---------------------------------- */
 /* ESTILOS DA MODAL */
 /* ---------------------------------- */
@@ -606,6 +608,7 @@ body {
   /* Garante que fique acima de tudo */
 }
 
+
 /* Conteúdo principal da modal */
 .modal-conteudo {
   background: #fff;
@@ -618,16 +621,21 @@ body {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
+
+
 .modal-conteudo.login {
   background: #fff;
   padding: 15px;
   border-radius: 10px;
   max-width: 600px;
   width: 90%;
+  height: 95vh;
   text-align: center;
   position: relative;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
+
+
 
 /* Botão de Fechar (X) */
 .fechar-modal {
@@ -773,7 +781,6 @@ body {
   background-color: var(--background);
   margin-bottom: 8vh;
   text-align: center;
-  padding: 4vh;
   border-radius: 2vh;
 
 
