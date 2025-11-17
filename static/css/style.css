@@ -10,13 +10,14 @@
   --primary-dark: hsl(201, 89%, 35%);
   --secondary: #ff850a;
   --secondary-light: hsl(142, 76%, 60%);
-  --action:#d0531c;
+  --action: #d0531c;
   --foreground: hsl(222, 47%, 11%);
   --background: hsl(0, 0%, 100%);
   --muted: hsl(210, 40%, 96%);
   --muted-foreground: hsl(215, 16%, 47%);
-  --bege:#e9e6df;
-  --marrom:#4a3328;
+  --bege: #e9e6df;
+  --marrom: #4a3328;
+  --nav: #fffffff0;
 
 
   /* cores da paleta da empresa:
@@ -40,7 +41,7 @@ body {
   position: fixed;
   top: 0;
   width: 100%;
-  background: rgba(255, 255, 255, 0.95);
+  background: var(--nav);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid #e5e7eb;
   z-index: 1000;
@@ -56,11 +57,16 @@ body {
   align-items: center;
 }
 
+.logo img {
+  width: 70px;
+}
+
 .logo {
   display: flex;
   align-items: center;
   gap: 0.5rem;
   font-size: 1.5rem;
+  margin-left: 1rem;
   font-weight: bold;
   text-decoration: none;
   -webkit-background-clip: text;
@@ -83,6 +89,49 @@ body {
 .nav a:hover {
   color: var(--foreground);
 }
+
+
+
+.menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 10px;
+  z-index: 100;
+}
+
+
+.menu-toggle span {
+  display: block;
+  width: 25px;
+  height: 3px;
+  margin: 5px 0;
+  background: #000;
+  transition: 0.4s;
+}
+
+
+/* faz o hamburguer virar um X ---------------------*/
+
+
+.menu-toggle.active span:nth-child(1) {
+  transform: translateY(8px) rotate(45deg);
+}
+
+.menu-toggle.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.menu-toggle.active span:nth-child(3) {
+  transform: translateY(-8px) rotate(-45deg);
+}
+
+/* ---------------------------------------------------*/
+
+
+
+
 
 .btn {
   padding: 0.625rem 1.5rem;
@@ -139,6 +188,7 @@ body {
   background: rgba(255, 255, 255, 0.2);
 }
 
+
 /* Hero Section */
 .hero {
   min-height: 100vh;
@@ -151,6 +201,9 @@ body {
     url('https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=1920') center/cover;
 }
 
+
+
+
 .hero-content {
   text-align: center;
   color: white;
@@ -159,11 +212,14 @@ body {
   animation: fadeIn 1s ease-out;
 }
 
+
 .hero h1 {
   font-size: 3.5rem;
   font-weight: bold;
   margin-bottom: 1.5rem;
 }
+
+
 
 .hero .gradient-text {
   background: linear-gradient(135deg, var(--secondary), var(--primary-light));
@@ -172,11 +228,14 @@ body {
   background-clip: text;
 }
 
+
 .hero p {
   font-size: 1.5rem;
   margin-bottom: 2rem;
   opacity: 0.9;
 }
+
+
 
 .hero-buttons {
   display: flex;
@@ -197,6 +256,8 @@ body {
   }
 }
 
+
+
 /* Container */
 .container {
   max-width: 1200px;
@@ -204,20 +265,28 @@ body {
   padding: 0 1rem;
 }
 
+
+
 /* Section */
+
 .section {
   padding: 5rem 0;
 }
+
 
 .section-header {
   text-align: center;
   margin-bottom: 4rem;
 }
 
+
+
 .section-header h2 {
   font-size: 3rem;
   margin-bottom: 1rem;
 }
+
+
 
 .section-divider {
   width: 6rem;
@@ -226,6 +295,7 @@ body {
   margin: 0 auto 1.5rem;
 }
 
+
 .section-header p {
   font-size: 1.125rem;
   color: var(--muted-foreground);
@@ -233,21 +303,27 @@ body {
   margin: 0 auto;
 }
 
+
 /* Grid */
 .grid {
   display: grid;
   gap: 2rem;
 }
 
+
 .grid-3 {
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
 }
+
 
 .grid-4 {
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
 }
 
+
+
 /* Card */
+
 .card {
   background: white;
   border-radius: 1rem;
@@ -257,10 +333,13 @@ body {
   transition: all 0.3s;
 }
 
+
 .card:hover {
   transform: translateY(-8px);
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
 }
+
+
 
 .card-icon {
   width: 4rem;
@@ -275,14 +354,17 @@ body {
   margin: 0 auto 1.5rem auto;
 }
 
+
 .card h3 {
   font-size: 1.5rem;
   margin-bottom: 1rem;
 }
 
+
 .card p {
   color: var(--muted-foreground);
 }
+
 
 /* Cause Card */
 .cause-card {
@@ -293,9 +375,12 @@ body {
   transition: all 0.3s;
 }
 
+
 .cause-card:hover {
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
 }
+
+
 
 .cause-card-image {
   position: relative;
@@ -303,26 +388,40 @@ body {
   overflow: hidden;
 }
 
+
+
+
+
 .cause-card-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   transition: transform 0.5s;
+
+
 }
 
 .cause-card:hover .cause-card-image img {
   transform: scale(1.1);
+
 }
+
+
 
 .cause-card-overlay {
   position: absolute;
   inset: 0;
   background: linear-gradient(to top, var(--marrom), transparent);
   opacity: 0.6;
+
 }
+
+
 
 .cause-card-content {
   padding: 1.5rem;
+
+
 }
 
 /* Stats */
@@ -333,23 +432,37 @@ body {
   text-align: center;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   transition: all 0.3s;
+
+
 }
 
+
+
 .stats-card:hover {
+
   transform: translateY(-8px);
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
 }
 
+
+
 .stats-value {
+
   font-size: 2.5rem;
   font-weight: bold;
   margin: 1rem 0;
+
 }
+
+
 
 .stats-label {
   color: var(--muted-foreground);
   font-weight: 500;
+
 }
+
+
 
 /* CTA Section */
 .cta-section {
@@ -358,7 +471,10 @@ body {
   padding: 3rem 2rem;
   text-align: center;
   color: white;
+
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+
+
 }
 
 .cta-section h3 {
@@ -387,10 +503,13 @@ body {
 }
 
 .footer-grid {
-  display: grid;
+  display: flex;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 2rem;
+  gap: 5rem;
   margin-bottom: 2rem;
+  align-content: center;
+  align-items: center;
+  flex-wrap: wrap;
 }
 
 .footer h3 {
@@ -543,10 +662,15 @@ body {
   margin: 0 auto;
 }
 
+
+
 /* Área da Chave PIX */
 .chave-pix-area {
   margin: 20px 0;
+
+
 }
+
 
 .chave-pix-area label {
   display: block;
@@ -555,12 +679,15 @@ body {
   text-align: left;
 }
 
+
 .input-com-copia {
   display: flex;
   border: 1px solid #ccc;
   border-radius: 4px;
   overflow: hidden;
 }
+
+
 
 #chavePixInput {
   flex-grow: 1;
@@ -570,6 +697,8 @@ body {
   background-color: #f7f7f7;
   cursor: text;
 }
+
+
 
 .btn-copiar {
   background-color: #e9ecef;
@@ -583,13 +712,14 @@ body {
   background-color: #dee2e6;
 }
 
-/* Mensagens de Doação */
+
+
+
 .mensagem-doacao {
   font-size: 14px;
   color: #666;
 }
 
-/* Mensagem de Cópia */
 .mensagem-copia {
   display: block;
   height: 14px;
@@ -602,33 +732,36 @@ body {
 
 
 .modal-overlay {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.6);
-    justify-content: center;
-    align-items: center;
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  justify-content: center;
+  align-items: center;
 }
+
+
 
 .modal-conteudo {
-    background: #fff;
-    padding: 25px;
-    width: 400px;
-    border-radius: 10px;
-    position: relative;
+  background: #fff;
+  padding: 25px;
+  width: 400px;
+  border-radius: 10px;
+  position: relative;
 }
 
+
 .fechar-modal {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: transparent;
-    border: none;
-    font-size: 24px;
-    cursor: pointer;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: transparent;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
 }
 
 
@@ -642,6 +775,7 @@ body {
   text-align: center;
   padding: 4vh;
   border-radius: 2vh;
+
 
   .fechar-modal {
     position: fixed;
@@ -658,12 +792,14 @@ body {
     margin-bottom: 0rem;
   }
 
+
   p {
     color: #333;
     font-size: 1.5rem;
     line-height: 1.6;
     margin-bottom: 1rem;
   }
+
 
   a {
     background-color: #FF9500;
@@ -676,6 +812,7 @@ body {
     border-radius: 4vh;
   }
 
+
   button {
     background-color: #FF9500;
     height: 5vh;
@@ -684,6 +821,8 @@ body {
     border-radius: 4vh;
   }
 }
+
+
 
 
 .form-container {
@@ -713,7 +852,6 @@ body {
       outline: none;
     }
 
-    /* Apenas os selects terão a seta */
     select {
       width: 100%;
       padding: 14px 12px;
@@ -721,7 +859,6 @@ body {
       border: 1.5px solid #ccc;
       border-radius: 6px;
       background-color: white !important;
-      /* mantém sempre branco */
       color: #474747;
       outline: none;
       appearance: none;
@@ -762,6 +899,8 @@ body {
     }
   }
 
+
+
   &:-webkit-autofill,
   &:-webkit-autofill:hover,
   &:-webkit-autofill:focus,
@@ -773,25 +912,32 @@ body {
     -webkit-text-fill-color: #474747 !important;
   }
 
+
   .form-group.full {
     flex: 1 1 100%;
   }
 }
 
 @media (max-width: 768px) {
+  .menu-toggle {
+    display: block;
+  }
+
   .nav {
     display: none;
+
+    position: absolute;
+    top: 102px;
+    left: 0;
+    width: 100%;
+    background-color: var(--nav);
+    flex-direction: column;
+    padding: 20px 0;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 99;
   }
 
-  .hero h1 {
-    font-size: 2rem;
-  }
-
-  .hero p {
-    font-size: 1.125rem;
-  }
-
-  .section-header h2 {
-    font-size: 2rem;
+  .nav.active {
+    display: flex;
   }
 }

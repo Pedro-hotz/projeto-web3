@@ -4,29 +4,37 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="../static/css/style.css"> <!-- Direciona para o css atual lemnbrar de mudar, rodei diferente pra nao precisar de flask--> 
+  <link rel="stylesheet" href="../static/css/style.css">
+  <!-- Direciona para o css atual lemnbrar de mudar, rodei diferente pra nao precisar de flask-->
 
   <title>Home</title>
 </head>
 
 <body>
 
-  <!-- Header -->
-  <header class="header">
+ <header class="header">
     <div class="header-container">
-      <a href="#" class="logo">
-         <img src="../static/img/transparente(1).png" alt="logo"> <!--Logo em png/Não ta rodando sem o flask-->
-      </a>
-      <nav class="nav">
-        <a href="#missao">Nossa Missão</a>
-        <a href="#atuacao">Áreas de Atuação</a>
-        <a href="#impacto">Impacto</a>
-        <a href="#como-ajudar">Como Ajudar</a>
-        <a data-abrir-modal="pix" class="btn btn-action doar">Doar Agora</a>
-        <a data-abrir-modal="login" class="btn btn-action login">Entrar</a>
-      </nav>
+        <a href="#" class="logo">
+            <img src="{{ url_for('static', filename='img/logo.png')}}" alt="logo">
+        </a>
+        
+        <nav class="nav" id="main-nav">
+            <a href="#missao">Nossa Missão</a>
+            <a href="#atuacao">Áreas de Atuação</a>
+            <a href="#impacto">Impacto</a>
+            <a href="#como-ajudar">Como Ajudar</a>
+            <a href="https://apoia.se/sementesdeafeto" target="_blank" class="btn btn-action doar">Doar Agora</a>
+            <a data-abrir-modal="login" class="btn btn-action login">Entrar</a>
+        </nav>
+
+        <button class="menu-toggle" id="menu-toggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
     </div>
-  </header>
+</header>
 
   <!-- Hero Section -->
   <section class="hero">
@@ -37,7 +45,7 @@
       </h1>
       <p>Juntos, podemos plantar a semente de um futuro melhor. Cada ação conta, cada doação transforma.</p>
       <div class="hero-buttons">
-        <a data-abrir-modal="pix" class="btn btn-action">Doar Agora</a>
+        <a href="https://apoia.se/sementesdeafeto" target="_blank" class="btn btn-action">Doar Agora</a>
       </div>
     </div>
   </section>
@@ -48,8 +56,8 @@
       <div class="section-header">
         <h2>Nossa Missão</h2>
         <div class="section-divider"></div>
-        <p>Plantar pequenas ações que terão enorme ressonância com o nosso cuidado 
-          ao processo de (des)envolvimento e sensibilização aos afetos, cultivando 
+        <p>Plantar pequenas ações que terão enorme ressonância com o nosso cuidado
+          ao processo de (des)envolvimento e sensibilização aos afetos, cultivando
           coletividade com o plantio de "sementes que se transformarão em florestas".</p>
       </div>
 
@@ -79,8 +87,8 @@
       <div class="section-header">
         <h2>Áreas de Atuação</h2>
         <div class="section-divider"></div>
-        <p>Nosso principal público-alvo é a juventude favelada e periférica, mas cada 
-          projeto tem suas especificidades, atendendo a crianças, artistas, pessoas em situação de rua, 
+        <p>Nosso principal público-alvo é a juventude favelada e periférica, mas cada
+          projeto tem suas especificidades, atendendo a crianças, artistas, pessoas em situação de rua,
           entre outros, incluindo projetos com público geral. Alguns de nossos projetos são:</p>
       </div>
 
@@ -107,7 +115,8 @@
         </div>
         <div class="cause-card">
           <div class="cause-card-image">
-            <img src="https://f.i.uol.com.br/fotografia/2022/07/22/165850753162dad10b171cd_1658507531_3x2_rt.jpg" alt="Água Potável">
+            <img src="https://f.i.uol.com.br/fotografia/2022/07/22/165850753162dad10b171cd_1658507531_3x2_rt.jpg"
+              alt="Água Potável">
             <div class="cause-card-overlay"></div>
           </div>
           <div class="cause-card-content">
@@ -117,11 +126,13 @@
         </div>
         <div class="cause-card">
           <div class="cause-card-image">
-            <img src="https://cdn.wizard.com.br/wp-content/uploads/2024/08/02153913/ensinar-ingles-a-criancas-e-adolescentes.jpg" alt="Moradia">
+            <img
+              src="https://cdn.wizard.com.br/wp-content/uploads/2024/08/02153913/ensinar-ingles-a-criancas-e-adolescentes.jpg"
+              alt="Moradia">
             <div class="cause-card-overlay"></div>
           </div>
           <div class="cause-card-content">
-            <h3>🔠 Favelado Poliglota</h3>     <!-- MUDAR IMAGEM PARA UMA MAIS CONDIZENTE -->
+            <h3>🔠 Favelado Poliglota</h3> <!-- MUDAR IMAGEM PARA UMA MAIS CONDIZENTE -->
             <p>Aulas de inglês, espanhol, francês e etc.</p>
           </div>
         </div>
@@ -178,11 +189,10 @@
           <h3>Faça uma Doação</h3>
           <p>Contribua financeiramente com qualquer valor no nosso apoia-se. Cada centavo faz diferença.</p>
           <br>
-          <a data-abrir-modal="pix" class="btn btn-action">Doar Agora</a>
+          <a href="https://apoia.se/sementesdeafeto" target="_blank" class="btn btn-action">Doar Agora</a>
         </div>
         <div class="card" style="text-align: center;">
-          <div class="card-icon"
-            style="margin: 0 auto 1.5rem;">👥
+          <div class="card-icon" style="margin: 0 auto 1.5rem;">👥
           </div>
           <h3>Seja Voluntário</h3>
           <p>Doe seu tempo e talento. Junte-se ao nosso time de voluntários.</p>
@@ -199,8 +209,7 @@
 
         </div>
         <div class="card" style="text-align: center;">
-          <div class="card-icon"
-            style="margin: 0 auto 1.5rem;">🏢
+          <div class="card-icon" style="margin: 0 auto 1.5rem;">🏢
           </div>
           <h3>Parceria Corporativa</h3>
           <p>Empresas podem apoiar nossos projetos e fazer parte da mudança.</p>
@@ -214,7 +223,7 @@
           <h3>Pronto para Fazer a Diferença?</h3>
           <p>Cada ação conta. Comece hoje e seja parte da transformação que o mundo precisa.</p>
           <div class="cta-buttons">
-            <a data-abrir-modal="pix" class="btn btn-action">Doe Agora</a>
+            <a href="https://apoia.se/sementesdeafeto" target="_blank" class="btn btn-action">Doe Agora</a>
             <a data-abrir-modal="lead" class="btn btn-action"
               style="background-color: hsl(227.08deg 100% 57.14%);">Inscrever-se</a>
           </div>
@@ -235,9 +244,11 @@
           <p style="opacity: 0.8; margin-bottom: 1rem;">Transformando vidas através do amor, dedicação e ação
             comunitária.</p>
           <div class="social-links">
-            <a href="https://www.instagram.com/sdafeto?igsh=MWN5OXFrMGFxZ2k4cw==" target="_blank" class="social-link">📷</a>
-            <a href="https://youtube.com/@sdafeto?si=V4z39Vbc7g8VEKfM" target="_blank "class="social-link">▶️</a>
-            <a href="https://linktr.ee/sementesdeafeto?utm_source=linktree_profile_share&ltsid=81580f9b-34c7-4e17-8010-e76db4126b96" target="_blank "class="social-link">🌳</a>
+            <a href="https://www.instagram.com/sdafeto?igsh=MWN5OXFrMGFxZ2k4cw==" target="_blank"
+              class="social-link"><img style="width: 28px;" src="../static/img/Instagram_icon-icons.com_66804.svg" alt=""></a>
+            <a href="https://youtube.com/@sdafeto?si=V4z39Vbc7g8VEKfM" target="_blank " class="social-link"><img  src="../static/img/YouTube_23392.png" alt=""></a>
+            <a href="https://linktr.ee/sementesdeafeto?utm_source=linktree_profile_share&ltsid=81580f9b-34c7-4e17-8010-e76db4126b96"
+              target="_blank " class="social-link">🌳</a>
           </div>
         </div>
 
@@ -265,7 +276,7 @@
           <h3>Contato</h3>
           <ul>
             <!-- <li>📍 Rua da Esperança, 123<br>São Paulo, SP</li> -->
-            <li>📞 (21) 984195611 -  (21) 997106443</li>
+            <li>📞 (21) 984195611 - (21) 997106443</li>
             <li>✉️ contatosementesdeafeto@gmail.com</li>
           </ul>
         </div>
@@ -279,7 +290,7 @@
 
 
   <!-- MODAL PIX -->
-  <div class="modal-overlay" data-modal="pix">
+  <!-- <div class="modal-overlay" data-modal="pix">
     <div class="modal-conteudo">
       <button data-fechar-modal="pix" class="fechar-modal">&times;</button>
 
@@ -308,7 +319,7 @@
       <p class="mensagem-doacao">Toda doação ajuda a transformar vidas</p>
       <p class="mensagem-doacao">Sua contribuição faz a diferença!</p>
     </div>
-  </div>
+  </div> -->
 
 
 
@@ -392,21 +403,21 @@
     </div>
   </div>
 
-   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 
-    {% with mensagens = get_flashed_messages(with_categories=true) %}
-    {% if mensagens %}
-    {% for categoria, msg in mensagens %}
-    <script>
-        window.flashMessage = {
-            icon: "{{ categoria }}",
-            title: "{{ msg }}"
-        };
-    </script>
-    {% endfor %}
-    {% endif %}
-    {% endwith %}
+  {% with mensagens = get_flashed_messages(with_categories=true) %}
+  {% if mensagens %}
+  {% for categoria, msg in mensagens %}
+  <script>
+    window.flashMessage = {
+      icon: "{{ categoria }}",
+      title: "{{ msg }}"
+    };
+  </script>
+  {% endfor %}
+  {% endif %}
+  {% endwith %}
 
   <script src="{{ url_for('static', filename='js/alert.service.js') }}"></script>
   <script src="{{ url_for('static', filename='js/homepage.js') }}"></script>

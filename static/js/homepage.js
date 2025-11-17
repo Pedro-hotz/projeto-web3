@@ -37,8 +37,23 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
 
+  // hambuguer ------------------------------------------------------
+
+  const toggleButton = document.getElementById('menu-toggle');
+    const navMenu = document.getElementById('main-nav');
+
+    toggleButton.addEventListener('click', function () {
+      navMenu.classList.toggle('active');
+
+      toggleButton.classList.toggle('active');
+    });
+
+
+    //-------------------------------------------------------------
+
 });
 
+    
 
 const chavePixInput = document.getElementById('chavePixInput');
 const mensagemCopia = document.getElementById('mensagemCopia');
@@ -86,97 +101,97 @@ else
 const urlInput = document.getElementById('urlInput'); // Opcional, se o valor de cópia for fixo
 const btnCopiarUrl = document.getElementById('btnCopiarUrl');
 // 1. Adicionado: Elemento para exibir o status da cópia
-const mensagemStatus = document.getElementById('mensagemStatus'); 
+const mensagemStatus = document.getElementById('mensagemStatus');
 
-const URL_TO_COPY = 'http://127.0.0.1:5000/';
+const URL_TO_COPY = 'https://projeto-web3-1.onrender.com/';
 
 const copiarUrl = () => {
-    // Verificar se o elemento de feedback existe
-    const displayStatus = (mensagem) => {
-        if (mensagemStatus) {
-            mensagemStatus.textContent = mensagem;
-            setTimeout(() => {
-                mensagemStatus.textContent = '';
-            }, 3000);
-        }
-    };
+  // Verificar se o elemento de feedback existe
+  const displayStatus = (mensagem) => {
+    if (mensagemStatus) {
+      mensagemStatus.textContent = mensagem;
+      setTimeout(() => {
+        mensagemStatus.textContent = '';
+      }, 3000);
+    }
+  };
 
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-        // Método moderno (Recomendado)
-        navigator.clipboard.writeText(URL_TO_COPY).then(() => {
-            displayStatus('🔗 URL copiada com sucesso!');
-            showToast("success", "Link copiado com SUCESSO !")
-        }).catch(err => {
-            console.error('Falha ao usar navigator.clipboard.writeText', err);
-            fallbackCopy();
-        });
-    } else {
-        // Fallback antigo
-        fallbackCopy();
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    // Método moderno (Recomendado)
+    navigator.clipboard.writeText(URL_TO_COPY).then(() => {
+      displayStatus('🔗 URL copiada com sucesso!');
+      showToast("success", "Link copiado com SUCESSO !")
+    }).catch(err => {
+      console.error('Falha ao usar navigator.clipboard.writeText', err);
+      fallbackCopy();
+    });
+  } else {
+    // Fallback antigo
+    fallbackCopy();
+  }
+
+  // Função de Fallback (usa o 'urlInput' temporariamente)
+  function fallbackCopy() {
+    if (!urlInput) {
+      displayStatus('Erro: Não foi possível copiar (Fallback indisponível).');
+      return;
     }
 
-    // Função de Fallback (usa o 'urlInput' temporariamente)
-    function fallbackCopy() {
-        if (!urlInput) {
-            displayStatus('Erro: Não foi possível copiar (Fallback indisponível).');
-            return;
-        }
-        
-        // CUIDADO: Este método exige que 'urlInput' seja um <textarea> ou <input>
-        const originalValue = urlInput.value;
-        urlInput.value = URL_TO_COPY; // Insere o valor fixo para a cópia
-        
-        try {
-            urlInput.select();
-            document.execCommand('copy');
-            showToast("sucess", "Ajude a nossa causa !")
-        } catch (err) {
-            console.error('Não foi possível copiar a URL', err);
-            displayStatus('Erro ao copiar URL');
-        } finally {
-            urlInput.value = originalValue;
-        }
+    // CUIDADO: Este método exige que 'urlInput' seja um <textarea> ou <input>
+    const originalValue = urlInput.value;
+    urlInput.value = URL_TO_COPY; // Insere o valor fixo para a cópia
+
+    try {
+      urlInput.select();
+      document.execCommand('copy');
+      showToast("sucess", "Ajude a nossa causa !")
+    } catch (err) {
+      console.error('Não foi possível copiar a URL', err);
+      displayStatus('Erro ao copiar URL');
+    } finally {
+      urlInput.value = originalValue;
     }
+  }
 };
 
 if (btnCopiarUrl) {
-    btnCopiarUrl.addEventListener('click', copiarUrl);
+  btnCopiarUrl.addEventListener('click', copiarUrl);
 } else {
-    console.warn('btnCopiarUrl não encontrado (id="btnCopiarUrl")');
+  console.warn('btnCopiarUrl não encontrado (id="btnCopiarUrl")');
 }
 
 
 // Encontra o formulário de login pelo ID
 const formLogin = document.getElementById('formLogin');
 
-formLogin.addEventListener('submit', function(e) {
-    e.preventDefault();
+formLogin.addEventListener('submit', function (e) {
+  e.preventDefault();
 
-    const formData = new FormData(formLogin);
+  const formData = new FormData(formLogin);
 
-    fetch(formLogin.action, {
-        method: 'POST',
-        body: formData 
-    })
+  fetch(formLogin.action, {
+    method: 'POST',
+    body: formData
+  })
     .then(response => {
-        return response.json().then(data => {
-            if (!response.ok) throw new Error(data.mensagem);
-            return data;
-        });
+      return response.json().then(data => {
+        if (!response.ok) throw new Error(data.mensagem);
+        return data;
+      });
     })
     .then(data => {
-        if (data.status === 'sucesso' && data.redirect) {
-            window.location.href = data.redirect;
-        }
+      if (data.status === 'sucesso' && data.redirect) {
+        window.location.href = data.redirect;
+      }
     })
     .catch(error => {
-        console.error('Login Failed:', error.message);
+      console.error('Login Failed:', error.message);
 
-        if (typeof showToast === 'function') {
-            showToast("error", error.message);
-        }
+      if (typeof showToast === 'function') {
+        showToast("error", error.message);
+      }
 
-        document.getElementById('senhaLogin').value = '';
+      document.getElementById('senhaLogin').value = '';
     });
 });
 
@@ -185,33 +200,33 @@ formLogin.addEventListener('submit', function(e) {
 
 
 async function enviarLead(event) {
-    event.preventDefault(); // impede reload
+  event.preventDefault(); // impede reload
 
-    const form = document.getElementById("formLead");
-    const formData = new FormData(form);
+  const form = document.getElementById("formLead");
+  const formData = new FormData(form);
 
-    try {
-        const response = await fetch("/enviarEmail", {
-            method: "POST",
-            body: formData
-        });
+  try {
+    const response = await fetch("/enviarEmail", {
+      method: "POST",
+      body: formData
+    });
 
-        const data = await response.json();
+    const data = await response.json();
 
-        if (response.ok) {
-            showToast("success", data.mensagem);
-            form.reset();
+    if (response.ok) {
+      showToast("success", data.mensagem);
+      form.reset();
 
-            // fecha o modal automaticamente
-            const modal = document.querySelector('[data-modal="lead"]');
-            if (modal) modal.classList.remove("ativo");
+      // fecha o modal automaticamente
+      const modal = document.querySelector('[data-modal="lead"]');
+      if (modal) modal.classList.remove("ativo");
 
-        } else {
-            showToast("error", data.mensagem);
-        }
-
-    } catch (error) {
-        console.error("Erro ao enviar:", error);
-        showToast("error", "Erro inesperado ao enviar. Tente novamente.");
+    } else {
+      showToast("error", data.mensagem);
     }
+
+  } catch (error) {
+    console.error("Erro ao enviar:", error);
+    showToast("error", "Erro inesperado ao enviar. Tente novamente.");
+  }
 }
